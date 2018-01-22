@@ -27,6 +27,7 @@
             <version>3.1.0</version>
         </dependency>
 
+        <!-- JMockit的引用声明必须在junit前面 -->
         <dependency>
             <groupId>org.jmockit</groupId>
             <artifactId>jmockit</artifactId>
