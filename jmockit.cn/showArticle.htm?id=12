@@ -60,15 +60,15 @@ clear:none;
 					<ul class="nav" id="channelNav">
 
 						
-							<li ><a href="showChannel.htm?channel=1">JMockit简介 </a></li>
+							<li ><a href="showChannel.htm%3Fchannel=1">JMockit简介 </a></li>
 						
-							<li ><a href="showChannel.htm?channel=2">JMockit基础 </a></li>
+							<li ><a href="showChannel.htm%3Fchannel=2">JMockit基础 </a></li>
 						
-							<li class="active"><a href="showChannel.htm?channel=3">JMockit常见用法 </a></li>
+							<li class="active"><a href="showChannel.htm%3Fchannel=3">JMockit常见用法 </a></li>
 						
-							<li ><a href="showChannel.htm?channel=4">JMockit高级用法 </a></li>
+							<li ><a href="showChannel.htm%3Fchannel=4">JMockit高级用法 </a></li>
 						
-							<li ><a href="showChannel.htm?channel=5">JMockit原理剖析 </a></li>
+							<li ><a href="showChannel.htm%3Fchannel=5">JMockit原理剖析 </a></li>
 						
 						<li><a href="https://github.com/hzdavid/jmockit.cn/issues" target="_blank">交流社区</a></li>
 
@@ -85,13 +85,13 @@ clear:none;
 				<div class="well sidebar-nav">
 					<ul class="nav nav-list">
 						
-							<li ><a href="showArticle.htm?id=2">Mock类 </a></li>
+							<li ><a href="showArticle.htm%3Fid=2">Mock类 </a></li>
 						
-							<li class="active"><a href="showArticle.htm?id=12">Mock实例 </a></li>
+							<li class="active"><a href="showArticle.htm%3Fid=12">Mock实例 </a></li>
 						
-							<li ><a href="showArticle.htm?id=11">Mock接口 </a></li>
+							<li ><a href="showArticle.htm%3Fid=11">Mock接口 </a></li>
 						
-							<li ><a href="showArticle.htm?id=13">Mock  Spring Bean </a></li>
+							<li ><a href="showArticle.htm%3Fid=13">Mock  Spring Bean </a></li>
 						
 
 					</ul>
@@ -148,7 +148,7 @@ public&nbsp;class&nbsp;InstanceMockingByExpectationsTest&nbsp;{
 <hr>
 <footer>
 	<p>
-		<span>&copy; JMockit中文网 2017</span>&nbsp;<span><a href="showChannel.htm?channel=6">关于本站</a></span>&nbsp;<span><a href="static/images/coffee.png" target="_blank">打赏咖啡</a></span>
+		<span>&copy; JMockit中文网 2017</span>&nbsp;<span><a href="showChannel.htm%3Fchannel=6">关于本站</a></span>&nbsp;<span><a href="static/images/coffee.png" target="_blank">打赏咖啡</a></span>
 	</p>
 </footer> 
 </body>

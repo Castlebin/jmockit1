@@ -60,15 +60,15 @@ clear:none;
 					<ul class="nav" id="channelNav">
 
 						
-							<li ><a href="showChannel.htm?channel=1">JMockit简介 </a></li>
+							<li ><a href="showChannel.htm%3Fchannel=1">JMockit简介 </a></li>
 						
-							<li ><a href="showChannel.htm?channel=2">JMockit基础 </a></li>
+							<li ><a href="showChannel.htm%3Fchannel=2">JMockit基础 </a></li>
 						
-							<li ><a href="showChannel.htm?channel=3">JMockit常见用法 </a></li>
+							<li ><a href="showChannel.htm%3Fchannel=3">JMockit常见用法 </a></li>
 						
-							<li ><a href="showChannel.htm?channel=4">JMockit高级用法 </a></li>
+							<li ><a href="showChannel.htm%3Fchannel=4">JMockit高级用法 </a></li>
 						
-							<li class="active"><a href="showChannel.htm?channel=5">JMockit原理剖析 </a></li>
+							<li class="active"><a href="showChannel.htm%3Fchannel=5">JMockit原理剖析 </a></li>
 						
 						<li><a href="https://github.com/hzdavid/jmockit.cn/issues" target="_blank">交流社区</a></li>
 
@@ -85,20 +85,20 @@ clear:none;
 				<div class="well sidebar-nav">
 					<ul class="nav nav-list">
 						
-							<li ><a href="showArticle.htm?id=16">JMockit架构 </a></li>
+							<li ><a href="showArticle.htm%3Fid=16">JMockit架构 </a></li>
 						
-							<li ><a href="showArticle.htm?id=19">JMockit启动过程 </a></li>
+							<li ><a href="showArticle.htm%3Fid=19">JMockit启动过程 </a></li>
 						
-							<li ><a href="showArticle.htm?id=20">Exepectations录制原理 </a></li>
+							<li ><a href="showArticle.htm%3Fid=20">Exepectations录制原理 </a></li>
 						
-							<li class="active"><a href="showArticle.htm?id=21">MockUp的Mock原理 </a></li>
+							<li class="active"><a href="showArticle.htm%3Fid=21">MockUp的Mock原理 </a></li>
 						
 
 					</ul>
 				</div>
 			</div>
 		
-		<div class="span9 text-left" id="articleContent"><p style="white-space: normal;">同<span style="color: rgb(51, 51, 51); font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; background-color: rgb(255, 255, 255);">Exepectations</span><span style="color: rgb(51, 51, 51); font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);">一样，</span>MockUp的使用频率也十分高。 我们可以借鉴分析<span style="color: rgb(51, 51, 51); font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; background-color: rgb(255, 255, 255);">Exepectations录制原理一样，分析MockUp是如何Mock的。</span></p><p style="white-space: normal;"><span style="color: rgb(51, 51, 51); font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; background-color: rgb(255, 255, 255);"><br/></span></p><p style="white-space: normal;"><span style="color: rgb(51, 51, 51); font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; background-color: rgb(255, 255, 255);">以<a href="showArticle.htm?id=2" target="_blank" style="color: rgb(0, 136, 204); text-decoration: underline; font-size: 16px;"><span style="color: rgb(51, 51, 51); font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; background-color: rgb(255, 255, 255); font-size: 16px;">类的Mock</span></a>中提到的测试程序ClassMockingByMockUpTest为例，我们看看MockUp对AnOrdinaryClass类重定义后是什么样子呢？通过一些反编译工具，我们抓取到的反编译代码如下：</span></p><pre class="brush:java;toolbar:false">public&nbsp;class&nbsp;AnOrdinaryClass&nbsp;{
+		<div class="span9 text-left" id="articleContent"><p style="white-space: normal;">同<span style="color: rgb(51, 51, 51); font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; background-color: rgb(255, 255, 255);">Exepectations</span><span style="color: rgb(51, 51, 51); font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);">一样，</span>MockUp的使用频率也十分高。 我们可以借鉴分析<span style="color: rgb(51, 51, 51); font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; background-color: rgb(255, 255, 255);">Exepectations录制原理一样，分析MockUp是如何Mock的。</span></p><p style="white-space: normal;"><span style="color: rgb(51, 51, 51); font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; background-color: rgb(255, 255, 255);"><br/></span></p><p style="white-space: normal;"><span style="color: rgb(51, 51, 51); font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; background-color: rgb(255, 255, 255);">以<a href="showArticle.htm%3Fid=2" target="_blank" style="color: rgb(0, 136, 204); text-decoration: underline; font-size: 16px;"><span style="color: rgb(51, 51, 51); font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; background-color: rgb(255, 255, 255); font-size: 16px;">类的Mock</span></a>中提到的测试程序ClassMockingByMockUpTest为例，我们看看MockUp对AnOrdinaryClass类重定义后是什么样子呢？通过一些反编译工具，我们抓取到的反编译代码如下：</span></p><pre class="brush:java;toolbar:false">public&nbsp;class&nbsp;AnOrdinaryClass&nbsp;{
 &nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;AnOrdinaryClass()&nbsp;{
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TestRun.lineExecuted(0,&nbsp;4);
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;super();
@@ -166,7 +166,7 @@ clear:none;
 <hr>
 <footer>
 	<p>
-		<span>&copy; JMockit中文网 2017</span>&nbsp;<span><a href="showChannel.htm?channel=6">关于本站</a></span>&nbsp;<span><a href="static/images/coffee.png" target="_blank">打赏咖啡</a></span>
+		<span>&copy; JMockit中文网 2017</span>&nbsp;<span><a href="showChannel.htm%3Fchannel=6">关于本站</a></span>&nbsp;<span><a href="static/images/coffee.png" target="_blank">打赏咖啡</a></span>
 	</p>
 </footer> 
 </body>
