@@ -8,9 +8,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-/**
- * @author gaoyuxin.gyx@alibaba-inc.com on 22/01/2018.
- */
 @RunWith(JMockit.class)
 public class HelloJMockitTest {
     

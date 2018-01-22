@@ -2,9 +2,6 @@ package com.heller.jmockit;
 
 import java.util.Locale;
 
-/**
- * @author gaoyuxin.gyx@alibaba-inc.com on 22/01/2018.
- */
 public class HelloJMockit {
     
     public String sayHello() {
