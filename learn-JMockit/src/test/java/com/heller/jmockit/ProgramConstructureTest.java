@@ -34,6 +34,10 @@ public class ProgramConstructureTest {
         }};
     }
     
+    /**
+     * b)测试参数：即测试方法的参数。它仅作用于当前测试方法。
+     * 给测试方法加参数，原本在JUnit中是不允许的，但是如果参数加了JMockit的注解API(@Mocked, @Tested, @Injectable,@Capturing)，则是允许的。
+     */
     @Test
     public void test2(@Mocked HelloJMockit helloJMockit /* 这是一个测试参数 */) {
         // 录制(Record)
