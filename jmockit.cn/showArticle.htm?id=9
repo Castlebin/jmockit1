@@ -1,0 +1,165 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>JMockit中文网</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="icon" href="static/images/icon.jpg" type="image/jpg">
+<!-- Le styles -->
+<link href="static/bootstrap/css/bootstrap.css" rel="stylesheet">
+<style type="text/css">
+body {
+	padding-top: 60px;
+	padding-bottom: 40px;
+}
+
+.sidebar-nav {
+	padding: 9px 0;
+}
+
+@media ( max-width : 980px) {
+	/* Enable use of floated navbar text */
+	.navbar-text.pull-right {
+		float: none;
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+}
+#channelNav  li  {
+clear:none;
+}
+ 
+</style>
+<link href="static/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+
+<script type="text/javascript" src="static/ueditor/ueditor.parse.js"></script>
+<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+      <script src="/static/bootstrap/js/html5shiv.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+	<div class="navbar navbar-inverse navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+					<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+				</button>
+				<a class="brand" href="index.htm">JMockit中文网</a>
+				<div class="nav-collapse collapse">
+					<!-- 
+					<p class="navbar-text pull-right">
+						Logged in as <a href="#" class="navbar-link">Username</a>
+					</p>
+					 -->
+					<ul class="nav" id="channelNav">
+
+						
+							<li ><a href="showChannel.htm?channel=1">JMockit简介 </a></li>
+						
+							<li class="active"><a href="showChannel.htm?channel=2">JMockit基础 </a></li>
+						
+							<li ><a href="showChannel.htm?channel=3">JMockit常见用法 </a></li>
+						
+							<li ><a href="showChannel.htm?channel=4">JMockit高级用法 </a></li>
+						
+							<li ><a href="showChannel.htm?channel=5">JMockit原理剖析 </a></li>
+						
+						<li><a href="https://github.com/hzdavid/jmockit.cn/issues" target="_blank">交流社区</a></li>
+
+					</ul>
+				</div>
+				<!--/.nav-collapse -->
+			</div>
+		</div>
+	</div>
+<div class="container-fluid">
+	<div class="row-fluid">
+		
+			<div class="span3">
+				<div class="well sidebar-nav">
+					<ul class="nav nav-list">
+						
+							<li ><a href="showArticle.htm?id=3">JMockit配置 </a></li>
+						
+							<li ><a href="showArticle.htm?id=4">JMockit 程序结构 </a></li>
+						
+							<li ><a href="showArticle.htm?id=5">API:@Mocked </a></li>
+						
+							<li ><a href="showArticle.htm?id=6">API:@Tested & @Injectable </a></li>
+						
+							<li ><a href="showArticle.htm?id=7">API:@Capturing </a></li>
+						
+							<li ><a href="showArticle.htm?id=8">API:Expectations </a></li>
+						
+							<li class="active"><a href="showArticle.htm?id=9">API:MockUp & @Mock </a></li>
+						
+							<li ><a href="showArticle.htm?id=10">API:Verifications </a></li>
+						
+
+					</ul>
+				</div>
+			</div>
+		
+		<div class="span9 text-left" id="articleContent"><p style="white-space: normal;">MockUp &amp; @Mock提供的Mock方式，程序员比较喜欢。因为它的Mock方式最直接。<br/></p><pre class="brush:java;toolbar:false">//Mockup&nbsp;&amp;&nbsp;@Mock的Mock方式
+public&nbsp;class&nbsp;MockUpTest&nbsp;{
+
+	@Test
+	public&nbsp;void&nbsp;testMockUp()&nbsp;{
+		//&nbsp;对Java自带类Calendar的get方法进行定制
+		//&nbsp;只需要把Calendar类传入MockUp类的构造函数即可
+		new&nbsp;MockUp&lt;Calendar&gt;(Calendar.class)&nbsp;{
+			//&nbsp;想Mock哪个方法，就给哪个方法加上@Mock，&nbsp;没有@Mock的方法，不受影响
+			@Mock
+			public&nbsp;int&nbsp;get(int&nbsp;unit)&nbsp;{
+				if&nbsp;(unit&nbsp;==&nbsp;Calendar.YEAR)&nbsp;{
+					return&nbsp;2017;
+				}
+				if&nbsp;(unit&nbsp;==&nbsp;Calendar.MONDAY)&nbsp;{
+					return&nbsp;12;
+				}
+				if&nbsp;(unit&nbsp;==&nbsp;Calendar.DAY_OF_MONTH)&nbsp;{
+					return&nbsp;25;
+				}
+				if&nbsp;(unit&nbsp;==&nbsp;Calendar.HOUR_OF_DAY)&nbsp;{
+					return&nbsp;7;
+				}
+				return&nbsp;0;
+			}
+		};
+		//&nbsp;从此Calendar的get方法，就沿用你定制过的逻辑，而不是它原先的逻辑。
+		Calendar&nbsp;cal&nbsp;=&nbsp;Calendar.getInstance(Locale.FRANCE);
+		Assert.assertTrue(cal.get(Calendar.YEAR)&nbsp;==&nbsp;2017);
+		Assert.assertTrue(cal.get(Calendar.MONDAY)&nbsp;==&nbsp;12);
+		Assert.assertTrue(cal.get(Calendar.DAY_OF_MONTH)&nbsp;==&nbsp;25);
+		Assert.assertTrue(cal.get(Calendar.HOUR_OF_DAY)&nbsp;==&nbsp;7);
+		//&nbsp;Calendar的其它方法，不受影响
+		Assert.assertTrue((cal.getFirstDayOfWeek()&nbsp;==&nbsp;Calendar.MONDAY));
+
+	}
+}</pre><p style="white-space: normal;"><br/></p><p style="white-space: normal;">Mock方式是不是很简单，直接 ？ 难怪很多程序员们都喜欢用MockUp &amp; @Mock了。</p><p style="white-space: normal;">那是不是我们只需要掌握MockUp &amp; @Mock就可以了？就不需要了解其它Mock API了？</p><p style="white-space: normal;">当然不是！ 掌握了MockUp &amp; @Mock的确能帮我们解决大部分的Mock场景，因为其使用方式最直接嘛。</p><p style="white-space: normal;">比如下面的场景是MockUp &amp; @Mock做不到的。</p><ol class=" list-paddingleft-2" style="width: 1073.5px; white-space: normal;"><li><p>一个类有多个实例。只对其中某1个实例进行mock。&nbsp;<br/>&nbsp;最新版的JMockit已经让MockUp不再支持对实例的Mock了。1.19之前的老版本仍支持。</p></li><li><p>AOP动态生成类的Mock。</p></li><li><p>对类的所有方法都需要Mock时，书写MockUp的代码量太大。<br/>比如web程序中，经常需要对HttpSession进行Mock。若用MockUp你要写大量的代码，可是用@Mocked就一行代码就可以搞定。<br/></p></li></ol><p style="white-space: normal;"><br/><br/>MockUp &amp; @Mock的确是好东西，在实际Mock场景中，我们需要灵活运用JMockit其它的Mock API。让我们的Mock程序简单，高效。<br/><br/>MockUp &amp; @Mock比较适合于一个项目中，用于对一些通用类的Mock，以减少大量重复的new Exceptations{{}}代码。</p><p><br/></p></div>
+		<script type="text/javascript">
+  	uParse('#articleContent', {
+	    rootPath: '/static/ueditor/'
+		})
+	</script>
+		
+	</div>
+	<!--/row-->
+</div>
+<!--/.fluid-container-->
+
+
+<hr>
+<footer>
+	<p>
+		<span>&copy; JMockit中文网 2017</span>&nbsp;<span><a href="showChannel.htm?channel=6">关于本站</a></span>&nbsp;<span><a href="static/images/coffee.png" target="_blank">打赏咖啡</a></span>
+	</p>
+</footer> 
+</body>
+</html>

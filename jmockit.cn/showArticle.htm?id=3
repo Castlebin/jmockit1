@@ -1,0 +1,158 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>JMockit中文网</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="icon" href="static/images/icon.jpg" type="image/jpg">
+<!-- Le styles -->
+<link href="static/bootstrap/css/bootstrap.css" rel="stylesheet">
+<style type="text/css">
+body {
+	padding-top: 60px;
+	padding-bottom: 40px;
+}
+
+.sidebar-nav {
+	padding: 9px 0;
+}
+
+@media ( max-width : 980px) {
+	/* Enable use of floated navbar text */
+	.navbar-text.pull-right {
+		float: none;
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+}
+#channelNav  li  {
+clear:none;
+}
+ 
+</style>
+<link href="static/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+
+<script type="text/javascript" src="static/ueditor/ueditor.parse.js"></script>
+<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+      <script src="/static/bootstrap/js/html5shiv.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+	<div class="navbar navbar-inverse navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+					<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+				</button>
+				<a class="brand" href="index.htm">JMockit中文网</a>
+				<div class="nav-collapse collapse">
+					<!-- 
+					<p class="navbar-text pull-right">
+						Logged in as <a href="#" class="navbar-link">Username</a>
+					</p>
+					 -->
+					<ul class="nav" id="channelNav">
+
+						
+							<li ><a href="showChannel.htm?channel=1">JMockit简介 </a></li>
+						
+							<li class="active"><a href="showChannel.htm?channel=2">JMockit基础 </a></li>
+						
+							<li ><a href="showChannel.htm?channel=3">JMockit常见用法 </a></li>
+						
+							<li ><a href="showChannel.htm?channel=4">JMockit高级用法 </a></li>
+						
+							<li ><a href="showChannel.htm?channel=5">JMockit原理剖析 </a></li>
+						
+						<li><a href="https://github.com/hzdavid/jmockit.cn/issues" target="_blank">交流社区</a></li>
+
+					</ul>
+				</div>
+				<!--/.nav-collapse -->
+			</div>
+		</div>
+	</div>
+<div class="container-fluid">
+	<div class="row-fluid">
+		
+			<div class="span3">
+				<div class="well sidebar-nav">
+					<ul class="nav nav-list">
+						
+							<li class="active"><a href="showArticle.htm?id=3">JMockit配置 </a></li>
+						
+							<li ><a href="showArticle.htm?id=4">JMockit 程序结构 </a></li>
+						
+							<li ><a href="showArticle.htm?id=5">API:@Mocked </a></li>
+						
+							<li ><a href="showArticle.htm?id=6">API:@Tested & @Injectable </a></li>
+						
+							<li ><a href="showArticle.htm?id=7">API:@Capturing </a></li>
+						
+							<li ><a href="showArticle.htm?id=8">API:Expectations </a></li>
+						
+							<li ><a href="showArticle.htm?id=9">API:MockUp & @Mock </a></li>
+						
+							<li ><a href="showArticle.htm?id=10">API:Verifications </a></li>
+						
+
+					</ul>
+				</div>
+			</div>
+		
+		<div class="span9 text-left" id="articleContent"><ol class=" list-paddingleft-2" style="list-style-type: decimal;"><li><p>在Maven pom.xml配置</p></li><pre class="brush:xml;toolbar:false">&nbsp;&nbsp;&lt;dependency&gt;
+	&lt;groupId&gt;org.jmockit&lt;/groupId&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;artifactId&gt;jmockit&lt;/artifactId&gt;
+	&lt;version&gt;1.36&lt;/version&gt;
+	&lt;scope&gt;test&lt;/scope&gt;
+&nbsp;&nbsp;&lt;/dependency&gt;</pre><li><p>JUnit4.x及以下用户特别注意事项</p><p>如果你是通过mvn test来运行你的测试程序 , 请确保JMockit的依赖定义出现在JUnit的依赖之前。&nbsp;&nbsp;</p><p><br/></p><pre class="brush:xml;toolbar:false">&lt;!--&nbsp;先声明jmockit的依赖&nbsp;--&gt;
+&nbsp;&nbsp;&nbsp;&lt;dependency&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;groupId&gt;org.jmockit&lt;/groupId&gt;
+	&lt;artifactId&gt;jmockit&lt;/artifactId&gt;
+	&lt;version&gt;1.36&lt;/version&gt;
+	&lt;scope&gt;test&lt;/scope&gt;
+&nbsp;&nbsp;&lt;/dependency&gt;
+&lt;!--&nbsp;再声明junit的依赖&nbsp;--&gt;
+&nbsp;&nbsp;&nbsp;&lt;dependency&gt;
+	&lt;groupId&gt;junit&lt;/groupId&gt;
+	&lt;artifactId&gt;junit&lt;/artifactId&gt;
+	&lt;version&gt;4.9&lt;/version&gt;
+	&lt;scope&gt;test&lt;/scope&gt;
+&nbsp;&nbsp;&lt;/dependency&gt;</pre><p><br/></p><p><br/></p><p>如果你是在Eclipse中运行/调试你的测试程序， 需要确保JMockit出现在JUnit之前。你可以提供Up,Down来调整。<br/><img src="static/images/junit4_eclipse_config.png"/><br/><br/></p></li><li><p>JMockit Coverage配置</p><p>&nbsp; &nbsp;如果你还需要使用JMockit的代码覆盖率功能，你需要在Maven pom.xml中如下定义</p><pre class="brush:xml;toolbar:false">&nbsp;&lt;plugin&gt;
+	&nbsp;&lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;
+	&lt;configuration&gt;
+	&lt;argLine&gt;-javaagent:&quot;${settings.localRepository}/org/jmockit/jmockit/1.36/jmockit-1.36.jar=coverage&quot;&lt;/argLine&gt;
+	&lt;disableXmlReport&gt;false&lt;/disableXmlReport&gt;
+	&lt;systemPropertyVariables&gt;
+	&lt;coverage-output&gt;html&lt;/coverage-output&gt;
+	&lt;coverage-outputDir&gt;${project.build.directory}/codecoverage-output&lt;/coverage-outputDir&gt;
+	&lt;coverage-metrics&gt;all&lt;/coverage-metrics&gt;
+	&lt;/systemPropertyVariables&gt;
+	&lt;/configuration&gt;
+&nbsp;&lt;/plugin&gt;</pre></li><li><p>常见错误<br/><br/>java.lang.IllegalStateException: Native library for Attach API not available in this JRE<br/></p><p>Caused by: java.lang.UnsatisfiedLinkError: no attach in java.library.path</p></li></ol><p>&nbsp; &nbsp;遇到这种情况，你是用JRE来跑测试程序的，需要切换成JDK才可以。</p><p><img src="static/images/jmockit_run_error.png"/></p><p><br/></p></div>
+		<script type="text/javascript">
+  	uParse('#articleContent', {
+	    rootPath: '/static/ueditor/'
+		})
+	</script>
+		
+	</div>
+	<!--/row-->
+</div>
+<!--/.fluid-container-->
+
+
+<hr>
+<footer>
+	<p>
+		<span>&copy; JMockit中文网 2017</span>&nbsp;<span><a href="showChannel.htm?channel=6">关于本站</a></span>&nbsp;<span><a href="static/images/coffee.png" target="_blank">打赏咖啡</a></span>
+	</p>
+</footer> 
+</body>
+</html>

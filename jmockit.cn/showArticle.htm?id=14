@@ -1,0 +1,174 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>JMockit中文网</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="icon" href="static/images/icon.jpg" type="image/jpg">
+<!-- Le styles -->
+<link href="static/bootstrap/css/bootstrap.css" rel="stylesheet">
+<style type="text/css">
+body {
+	padding-top: 60px;
+	padding-bottom: 40px;
+}
+
+.sidebar-nav {
+	padding: 9px 0;
+}
+
+@media ( max-width : 980px) {
+	/* Enable use of floated navbar text */
+	.navbar-text.pull-right {
+		float: none;
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+}
+#channelNav  li  {
+clear:none;
+}
+ 
+</style>
+<link href="static/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+
+<script type="text/javascript" src="static/ueditor/ueditor.parse.js"></script>
+<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+      <script src="/static/bootstrap/js/html5shiv.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+	<div class="navbar navbar-inverse navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+					<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+				</button>
+				<a class="brand" href="index.htm">JMockit中文网</a>
+				<div class="nav-collapse collapse">
+					<!-- 
+					<p class="navbar-text pull-right">
+						Logged in as <a href="#" class="navbar-link">Username</a>
+					</p>
+					 -->
+					<ul class="nav" id="channelNav">
+
+						
+							<li ><a href="showChannel.htm?channel=1">JMockit简介 </a></li>
+						
+							<li ><a href="showChannel.htm?channel=2">JMockit基础 </a></li>
+						
+							<li ><a href="showChannel.htm?channel=3">JMockit常见用法 </a></li>
+						
+							<li class="active"><a href="showChannel.htm?channel=4">JMockit高级用法 </a></li>
+						
+							<li ><a href="showChannel.htm?channel=5">JMockit原理剖析 </a></li>
+						
+						<li><a href="https://github.com/hzdavid/jmockit.cn/issues" target="_blank">交流社区</a></li>
+
+					</ul>
+				</div>
+				<!--/.nav-collapse -->
+			</div>
+		</div>
+	</div>
+<div class="container-fluid">
+	<div class="row-fluid">
+		
+			<div class="span3">
+				<div class="well sidebar-nav">
+					<ul class="nav nav-list">
+						
+							<li class="active"><a href="showArticle.htm?id=14">Mock构造函数&初始代码块 </a></li>
+						
+							<li ><a href="showArticle.htm?id=15">Mock一类多实例 </a></li>
+						
+							<li ><a href="showArticle.htm?id=17">Mock泛型(类型变量） </a></li>
+						
+							<li ><a href="showArticle.htm?id=18">Mock方法中调用老方法 </a></li>
+						
+
+					</ul>
+				</div>
+			</div>
+		
+		<div class="span9 text-left" id="articleContent"><p>有时候，有些编写不良好的类的构造函数，初始代码块，静态代码块存在大量的初始化逻辑，初始化会报错。</p><p>比如，有些类初始化的时候就去连结DB，连不上就报错。这很影响我们的测试程序的运行。</p><p>此时，我们需要把这些初始化逻辑Mock掉。用我们的Mock逻辑替代。要Mock这些初始化代码，很简单。见如下的例子：</p><pre class="brush:java;toolbar:false">//一个包含初始代码块的普通类&nbsp;
+public&nbsp;class&nbsp;AnOrdinaryClassWithBlock&nbsp;{
+	private&nbsp;int&nbsp;i;
+
+	public&nbsp;static&nbsp;int&nbsp;j;
+
+	//&nbsp;初始代码块
+	{
+		i&nbsp;=&nbsp;1;
+	}
+	//&nbsp;静态初始代码块
+	static&nbsp;{
+		j&nbsp;=&nbsp;2;
+	}
+
+	//&nbsp;构造函数
+	public&nbsp;AnOrdinaryClassWithBlock(int&nbsp;i)&nbsp;{
+		this.i&nbsp;=&nbsp;i;
+	}
+&nbsp;
+	public&nbsp;int&nbsp;getI()&nbsp;{
+		return&nbsp;i;
+	}
+
+	public&nbsp;void&nbsp;setI(int&nbsp;i)&nbsp;{
+		this.i&nbsp;=&nbsp;i;
+	}
+
+}</pre><p><br/></p><pre class="brush:java;toolbar:false">//Mock构造函数&amp;初始代码块
+public&nbsp;class&nbsp;ConstructorAndBlockMockingTest&nbsp;{
+	//&nbsp;AnOrdinaryClassWithBlock的MockUp类，继承MockUp即可
+	public&nbsp;static&nbsp;class&nbsp;AnOrdinaryClassWithBlockMockUp&nbsp;extends&nbsp;MockUp&lt;AnOrdinaryClassWithBlock&gt;&nbsp;{
+		//&nbsp;Mock构造函数和初始代码块,&nbsp;函数名$init就代表类的构造函数
+		@Mock
+		public&nbsp;void&nbsp;$init(int&nbsp;i)&nbsp;{
+		}
+
+		//&nbsp;Mock静态初始代码块,,&nbsp;函数名$init就代表类的静态代码块
+		@Mock
+		public&nbsp;void&nbsp;$clinit()&nbsp;{
+		}
+	}
+
+	@Test
+	public&nbsp;void&nbsp;testClassMockingByMockUp()&nbsp;{
+		new&nbsp;AnOrdinaryClassWithBlockMockUp();
+		AnOrdinaryClassWithBlock&nbsp;instance&nbsp;=&nbsp;new&nbsp;AnOrdinaryClassWithBlock(10);
+		//&nbsp;静态初始代码块被mock了
+		Assert.assertTrue(AnOrdinaryClassWithBlock.j&nbsp;==&nbsp;0);
+		//&nbsp;构造函数和初始代码块被mock
+		Assert.assertTrue(instance.getI()&nbsp;==&nbsp;0);
+	}
+
+}</pre><p><br/></p><p><br/></p><p><br/></p><p><br/></p></div>
+		<script type="text/javascript">
+  	uParse('#articleContent', {
+	    rootPath: '/static/ueditor/'
+		})
+	</script>
+		
+	</div>
+	<!--/row-->
+</div>
+<!--/.fluid-container-->
+
+
+<hr>
+<footer>
+	<p>
+		<span>&copy; JMockit中文网 2017</span>&nbsp;<span><a href="showChannel.htm?channel=6">关于本站</a></span>&nbsp;<span><a href="static/images/coffee.png" target="_blank">打赏咖啡</a></span>
+	</p>
+</footer> 
+</body>
+</html>

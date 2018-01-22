@@ -1,0 +1,166 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>JMockit中文网</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="icon" href="static/images/icon.jpg" type="image/jpg">
+<!-- Le styles -->
+<link href="static/bootstrap/css/bootstrap.css" rel="stylesheet">
+<style type="text/css">
+body {
+	padding-top: 60px;
+	padding-bottom: 40px;
+}
+
+.sidebar-nav {
+	padding: 9px 0;
+}
+
+@media ( max-width : 980px) {
+	/* Enable use of floated navbar text */
+	.navbar-text.pull-right {
+		float: none;
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+}
+#channelNav  li  {
+clear:none;
+}
+ 
+</style>
+<link href="static/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+
+<script type="text/javascript" src="static/ueditor/ueditor.parse.js"></script>
+<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+      <script src="/static/bootstrap/js/html5shiv.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+	<div class="navbar navbar-inverse navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+					<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+				</button>
+				<a class="brand" href="index.htm">JMockit中文网</a>
+				<div class="nav-collapse collapse">
+					<!-- 
+					<p class="navbar-text pull-right">
+						Logged in as <a href="#" class="navbar-link">Username</a>
+					</p>
+					 -->
+					<ul class="nav" id="channelNav">
+
+						
+							<li ><a href="showChannel.htm?channel=1">JMockit简介 </a></li>
+						
+							<li class="active"><a href="showChannel.htm?channel=2">JMockit基础 </a></li>
+						
+							<li ><a href="showChannel.htm?channel=3">JMockit常见用法 </a></li>
+						
+							<li ><a href="showChannel.htm?channel=4">JMockit高级用法 </a></li>
+						
+							<li ><a href="showChannel.htm?channel=5">JMockit原理剖析 </a></li>
+						
+						<li><a href="https://github.com/hzdavid/jmockit.cn/issues" target="_blank">交流社区</a></li>
+
+					</ul>
+				</div>
+				<!--/.nav-collapse -->
+			</div>
+		</div>
+	</div>
+<div class="container-fluid">
+	<div class="row-fluid">
+		
+			<div class="span3">
+				<div class="well sidebar-nav">
+					<ul class="nav nav-list">
+						
+							<li ><a href="showArticle.htm?id=3">JMockit配置 </a></li>
+						
+							<li ><a href="showArticle.htm?id=4">JMockit 程序结构 </a></li>
+						
+							<li class="active"><a href="showArticle.htm?id=5">API:@Mocked </a></li>
+						
+							<li ><a href="showArticle.htm?id=6">API:@Tested & @Injectable </a></li>
+						
+							<li ><a href="showArticle.htm?id=7">API:@Capturing </a></li>
+						
+							<li ><a href="showArticle.htm?id=8">API:Expectations </a></li>
+						
+							<li ><a href="showArticle.htm?id=9">API:MockUp & @Mock </a></li>
+						
+							<li ><a href="showArticle.htm?id=10">API:Verifications </a></li>
+						
+
+					</ul>
+				</div>
+			</div>
+		
+		<div class="span9 text-left" id="articleContent"><ol class=" list-paddingleft-2" style="list-style-type: decimal;"><li><p>当@Mocked修饰一个类时<br/><br/></p></li><pre class="brush:java;toolbar:false">&nbsp;//@Mocked注解用途
+public&nbsp;class&nbsp;MockedClassTest&nbsp;{
+	//&nbsp;加上了JMockit的API&nbsp;@Mocked,&nbsp;JMockit会帮我们实例化这个对象，不用担心它为null
+	@Mocked
+	Locale&nbsp;locale;
+
+	//&nbsp;当@Mocked作用于class
+	@Test
+	public&nbsp;void&nbsp;testMockedClass()&nbsp;{
+		//&nbsp;静态方法不起作用了,返回了null
+		Assert.assertTrue(Locale.getDefault()&nbsp;==&nbsp;null);
+		//&nbsp;非静态方法（返回类型为String）也不起作用了，返回了null
+		Assert.assertTrue(locale.getCountry()&nbsp;==&nbsp;null);
+		//&nbsp;自已new一个，也同样如此，方法都被mock了
+		Locale&nbsp;chinaLocale&nbsp;=&nbsp;new&nbsp;Locale(&quot;zh&quot;,&nbsp;&quot;CN&quot;);
+		Assert.assertTrue(chinaLocale.getCountry()&nbsp;==&nbsp;null);
+	}
+&nbsp;
+}</pre><li><p>当@Mocked修饰一个接口/抽象类时<br/><br/><br/></p></li><pre class="brush:java;toolbar:false">//@Mocked注解用途
+public&nbsp;class&nbsp;MockedInterfaceTest&nbsp;{
+
+	//&nbsp;加上了JMockit的API&nbsp;@Mocked,&nbsp;JMockit会帮我们实例化这个对象，尽管这个对象的类型是一个接口，不用担心它为null
+	@Mocked
+	HttpSession&nbsp;session;
+
+	//&nbsp;当@Mocked作用于interface
+	@Test
+	public&nbsp;void&nbsp;testMockedInterface()&nbsp;{
+		//&nbsp;（返回类型为String）也不起作用了，返回了null
+		Assert.assertTrue(session.getId()&nbsp;==&nbsp;null);
+		//&nbsp;（返回类型为原始类型）也不起作用了，返回了0
+		Assert.assertTrue(session.getCreationTime()&nbsp;==&nbsp;0L);
+		//&nbsp;(返回类型为原非始类型，非String，返回的对象不为空，这个对象也是JMockit帮你实例化的，同样这个实例化的对象也是一个Mocked对象)
+		Assert.assertTrue(session.getServletContext()&nbsp;!=&nbsp;null);
+		//&nbsp;Mocked对象返回的Mocked对象，（返回类型为String）的方法也不起作用了，返回了null
+		Assert.assertTrue(session.getServletContext().getContextPath()&nbsp;==&nbsp;null);
+	}
+}</pre><li><p>@Mocked功能总结<br/><br/>&nbsp;通过上述例子，可以看出：@Mocked修饰的类/接口，是告诉JMockit，帮我生成一个Mocked对象，这个对象方法（包含静态方法)返回默认值。<br/>即如果返回类型为原始类型(short,int,float,double,long)就返回0，如果返回类型为String就返回null，如果返回类型是其它引用类型，则返回这个引用类型的Mocked对象（这一点，是个递归的定义，需要好好理解一下）。<br/><br/></p></li><li><p>什么测试场景，我们要使用@Mocked<br/></p></li></ol><p>&nbsp; &nbsp; &nbsp; &nbsp; 当我们的测试程序依赖某个接口时，用@Mocked非常适合了。只需要@Mocked一个注解，JMockit就能帮我们生成这个接口的实例。&nbsp;<br/>&nbsp; &nbsp; &nbsp; &nbsp; 比如在分布式系统中，我们的测试程序依赖某个接口的实例是在远程服务器端时，我们在本地构建是非常困难的，此时就交给@Mocked，就太轻松啦!</p></div>
+		<script type="text/javascript">
+  	uParse('#articleContent', {
+	    rootPath: '/static/ueditor/'
+		})
+	</script>
+		
+	</div>
+	<!--/row-->
+</div>
+<!--/.fluid-container-->
+
+
+<hr>
+<footer>
+	<p>
+		<span>&copy; JMockit中文网 2017</span>&nbsp;<span><a href="showChannel.htm?channel=6">关于本站</a></span>&nbsp;<span><a href="static/images/coffee.png" target="_blank">打赏咖啡</a></span>
+	</p>
+</footer> 
+</body>
+</html>

@@ -1,0 +1,152 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>JMockit中文网</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="icon" href="static/images/icon.jpg" type="image/jpg">
+<!-- Le styles -->
+<link href="static/bootstrap/css/bootstrap.css" rel="stylesheet">
+<style type="text/css">
+body {
+	padding-top: 60px;
+	padding-bottom: 40px;
+}
+
+.sidebar-nav {
+	padding: 9px 0;
+}
+
+@media ( max-width : 980px) {
+	/* Enable use of floated navbar text */
+	.navbar-text.pull-right {
+		float: none;
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+}
+#channelNav  li  {
+clear:none;
+}
+ 
+</style>
+<link href="static/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+
+<script type="text/javascript" src="static/ueditor/ueditor.parse.js"></script>
+<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+      <script src="/static/bootstrap/js/html5shiv.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+	<div class="navbar navbar-inverse navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+					<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+				</button>
+				<a class="brand" href="index.htm">JMockit中文网</a>
+				<div class="nav-collapse collapse">
+					<!-- 
+					<p class="navbar-text pull-right">
+						Logged in as <a href="#" class="navbar-link">Username</a>
+					</p>
+					 -->
+					<ul class="nav" id="channelNav">
+
+						
+							<li class="active"><a href="showChannel.htm?channel=1">JMockit简介 </a></li>
+						
+							<li ><a href="showChannel.htm?channel=2">JMockit基础 </a></li>
+						
+							<li ><a href="showChannel.htm?channel=3">JMockit常见用法 </a></li>
+						
+							<li ><a href="showChannel.htm?channel=4">JMockit高级用法 </a></li>
+						
+							<li ><a href="showChannel.htm?channel=5">JMockit原理剖析 </a></li>
+						
+						<li><a href="https://github.com/hzdavid/jmockit.cn/issues" target="_blank">交流社区</a></li>
+
+					</ul>
+				</div>
+				<!--/.nav-collapse -->
+			</div>
+		</div>
+	</div>
+<div class="container-fluid">
+	<div class="row-fluid">
+		
+		<div class="span9 text-left" id="articleContent"><h4>JMockit是什么</h4><p>JMockit是一款Java类/接口/对象的Mock工具，目前广泛应用于Java应用程序的单元测试中。</p><p><br/></p><h4>为什么要学习JMockit</h4><p>首先，不会测试的不是好开发，不会Mock的不是好测试。因而，不会Mock的不是好开发。<img src="http://img.baidu.com/hi/jx2/j_0059.gif"/></p><p>当然，Java Mock工具很多，比如easyMock,Mockito等等。为什么要选择JMockit呢？其实也没有啥特别原因，Mock工具的原理都差不多，就看Mock工具封装的API是否易用了。JMockit的API易用，丰富！ 写出来的Mock程序代码完全面向对象。 那我们就先来看一小段JMockit测试程序，先睹为快吧！<br/><br/></p><pre class="brush:java;toolbar:false">//一个简单的类，能用不同语言打招呼
+public&nbsp;class&nbsp;HelloJMockit&nbsp;{
+	//&nbsp;向JMockit打招呼
+	public&nbsp;String&nbsp;sayHello()&nbsp;{
+		Locale&nbsp;locale&nbsp;=&nbsp;Locale.getDefault();
+		if&nbsp;(locale.equals(Locale.CHINA))&nbsp;{
+			//&nbsp;在中国，就说中文
+			return&nbsp;&quot;你好，JMockit!&quot;;
+		}&nbsp;else&nbsp;{
+			//&nbsp;在其它国家，就说英文
+			return&nbsp;&quot;Hello，JMockit!&quot;;
+		}
+	}
+}
+//HelloJMockit类的测试类
+public&nbsp;class&nbsp;HelloJMockitTest&nbsp;{&nbsp;
+
+	/**
+	&nbsp;*&nbsp;测试场景：当前是在中国
+	&nbsp;*/
+	@Test
+	public&nbsp;void&nbsp;testSayHelloAtChina()&nbsp;{
+		//&nbsp;假设当前位置是在中国
+		new&nbsp;Expectations(Locale.class)&nbsp;{
+			{
+				Locale.getDefault();
+				result&nbsp;=&nbsp;Locale.CHINA;
+			}
+		};
+		//&nbsp;断言说中文
+		Assert.assertTrue(&quot;你好，JMockit!&quot;.equals((new&nbsp;HelloJMockit()).sayHello()));
+	}
+
+	/**
+	&nbsp;*&nbsp;测试场景：当前是在美国
+	&nbsp;*/
+	@Test
+	public&nbsp;void&nbsp;testSayHelloAtUS()&nbsp;{
+		//&nbsp;假设当前位置是在美国
+		new&nbsp;Expectations(Locale.class)&nbsp;{
+			{
+				Locale.getDefault();
+				result&nbsp;=&nbsp;Locale.US;
+			}
+		};
+		//&nbsp;断言说英文
+		Assert.assertTrue(&quot;Hello，JMockit!&quot;.equals((new&nbsp;HelloJMockit()).sayHello()));
+	}
+}</pre><p><br/></p><p>在上面的例子中，为了对依赖（当前的位置）进行Mock，用简单的3行代码即可搞定。把测试代码的依赖抽象成期待(Expectations)，并把期待类Expectations作为本测试程序的内部类，可以任意访问本测试程序类的所有成员，为编写Mock程序提供极大便利。API面向对象特性封装良好。</p><p>此外，JMockit还提供了注解，支持泛型的Mock API用于对类/对象的属性，方法(支持static,private,final,native)，构造函数，初始代码块(含静态初始代码块)灵活Mock。</p><p><br/>可以说，JMockit是一款功能强大，API易用，不可或缺的Java Mock工具。</p><p><br/></p><h4>学习JMockit的先决条件</h4><p>Java基础，写过JUnit/TestNG程序。</p><p><br/></p><hr/><p>现在就让我们开始JMockit的学习之旅吧。先从<a href="showChannel.htm?channel=2" target="_self">JMockit基础</a>开始。</p><p><br/></p></div>
+		<script type="text/javascript">
+  	uParse('#articleContent', {
+	    rootPath: '/static/ueditor/'
+		})
+	</script>
+		
+	</div>
+	<!--/row-->
+</div>
+<!--/.fluid-container-->
+
+
+<hr>
+<footer>
+	<p>
+		<span>&copy; JMockit中文网 2017</span>&nbsp;<span><a href="showChannel.htm?channel=6">关于本站</a></span>&nbsp;<span><a href="static/images/coffee.png" target="_blank">打赏咖啡</a></span>
+	</p>
+</footer> 
+</body>
+</html>

@@ -1,0 +1,121 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>JMockit中文网</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="icon" href="static/images/icon.jpg" type="image/jpg">
+<!-- Le styles -->
+<link href="static/bootstrap/css/bootstrap.css" rel="stylesheet">
+<style type="text/css">
+body {
+	padding-top: 60px;
+	padding-bottom: 40px;
+}
+
+.sidebar-nav {
+	padding: 9px 0;
+}
+
+@media ( max-width : 980px) {
+	/* Enable use of floated navbar text */
+	.navbar-text.pull-right {
+		float: none;
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+}
+#channelNav  li  {
+clear:none;
+}
+ 
+</style>
+<link href="static/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+
+<script type="text/javascript" src="static/ueditor/ueditor.parse.js"></script>
+<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+      <script src="/static/bootstrap/js/html5shiv.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+	<div class="navbar navbar-inverse navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+					<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+				</button>
+				<a class="brand" href="index.htm">JMockit中文网</a>
+				<div class="nav-collapse collapse">
+					<!-- 
+					<p class="navbar-text pull-right">
+						Logged in as <a href="#" class="navbar-link">Username</a>
+					</p>
+					 -->
+					<ul class="nav" id="channelNav">
+
+						
+							<li ><a href="showChannel.htm?channel=1">JMockit简介 </a></li>
+						
+							<li ><a href="showChannel.htm?channel=2">JMockit基础 </a></li>
+						
+							<li ><a href="showChannel.htm?channel=3">JMockit常见用法 </a></li>
+						
+							<li ><a href="showChannel.htm?channel=4">JMockit高级用法 </a></li>
+						
+							<li class="active"><a href="showChannel.htm?channel=5">JMockit原理剖析 </a></li>
+						
+						<li><a href="https://github.com/hzdavid/jmockit.cn/issues" target="_blank">交流社区</a></li>
+
+					</ul>
+				</div>
+				<!--/.nav-collapse -->
+			</div>
+		</div>
+	</div>
+<div class="container-fluid">
+	<div class="row-fluid">
+		
+			<div class="span3">
+				<div class="well sidebar-nav">
+					<ul class="nav nav-list">
+						
+							<li class="active"><a href="showArticle.htm?id=16">JMockit架构 </a></li>
+						
+							<li ><a href="showArticle.htm?id=19">JMockit启动过程 </a></li>
+						
+							<li ><a href="showArticle.htm?id=20">Exepectations录制原理 </a></li>
+						
+							<li ><a href="showArticle.htm?id=21">MockUp的Mock原理 </a></li>
+						
+
+					</ul>
+				</div>
+			</div>
+		
+		<div class="span9 text-left" id="articleContent"><p>JMockit的功能确实太强了，作为一名程序员，我们还是需要知其然知其所以然以探究技术的本质。看看它背后是如何工作的。</p><p><br/></p><p>在弄懂JMockit的原理之前，我们先对JMockit的总体有个初步的认识。看看JMockit里面的都有些什么东东。</p><p><br/></p><p><img src="static/images/architecture.jpg"/></p><p><br/></p><p>通过上面的架构图，我们可以看到JMockit有如下核心组件</p><ol class=" list-paddingleft-2" style="list-style-type: decimal;"><li><p>JVM Attach</p><p>&nbsp; JMockit使用了JDK6动态添加代理功能。目的是为了运行JMockit启动程序做准备。 JMockit提供了不同OS的hotSpot JVM的Attach支持：&nbsp;BsdVirtualMachine,&nbsp;LinuxVirtualMachine,SolarisVirtualMachine,WindowsVirtualMachine。</p><p>JMockit启动程序：主要功能是集成测试框架(JUnit/TestNG)，完成对JMockit类转换器织入。</p></li><li><p>测试框架集成</p><p>提供了JUnit4/5, TestNG的支持。&nbsp;</p><p><br/>a)对JUnit4的集成方法：改写JUnit4的核心类org.junit.runner.Runner，org.junit.runners.model.FrameworkMethod,&nbsp;org.junit.runners.model.TestRunnerDecorator,org.junit.runners.model.RunNotifier。改写的目的是为了让测试程序在运行测试方法前，完成Mock 注解API(@Mocked,@Injectable,@Capturing)修饰的测试属性&amp;测试参数的类做相关字节码的织入。<br/>详见可以见JMockit源代码中Runner类，FakeFrameworkMethod类，JUnit4TestRunnerDecorator类，RunNotifierDecorator类。<br/><br/><br/>b)对JUnit5/TestNG的集成方法: 由于JUnit5/TestNG支持ServiceLoader的扩展体系，JMockit通过配置/META-INF/services/org.junit.platform.engine.TestEngine,/META-INF/services/org.testng.ITestNGListener完成对JUnit5/TestNG的集成。集成的目的同样是为了让测试程序在运行测试方法前，完成Mock 注解API(@Mocked,@Injectable,@Capturing)修饰的测试属性&amp;测试参数的类做相关字节码的织入。<br/><br/></p></li><li><p>字节码处理<br/>通过ASM，在类的某个方法中加入某段逻辑以达到Mock的目的；生成某个类的子类以支持抽象类的Mock；生成某个接口的实例类以支持接口的Mock。通过ASM, 这些都变得不那么复杂了。<br/><br/></p></li><li><p>类转换器<br/>类转换器是JMockit的核心。Mock的核心就是JMockit不同的类转换器在起作用。<br/><br/>a)录制(ExpectationsTransformer)<br/><br/>&nbsp; &nbsp;用于对new&nbsp;Expectations(){{}},new Verifications(){{}},匿名类进行重定义。用于支持测试程序中的录制，重放，校验。<br/><br/>b)伪类(ClassLoadingBridgeFields)<br/>&nbsp; &nbsp;伪类，即new MockUp&lt;T&gt; {}的匿名类或 extends&nbsp;MockUp&lt;T&gt;的子类。<br/>&nbsp; &nbsp;用于伪类的@Mock方法提供支持。 通过识别伪类@Mock方法，在对应的方法体中织入一段分支，用于走伪类的@Mock方法逻辑。<br/><br/>c)覆盖率(CodeCoverage)<br/>&nbsp; &nbsp;用于支持JMockit Coverage功能。 通过在类的方法体行加埋点。即可以完成行覆盖率，路径覆盖率的计算。<br/><br/>d)类缓存（CachedClassfiles）<br/><br/>&nbsp; &nbsp;这个没有什么好说的，对类进行了重定义，当然要求一个测试方法结束后，能复原类的原有字节码，于是需要一个Cache了。&nbsp;<br/><br/>e)对象捕捉(CaptureTransformer)</p><p>&nbsp; 用于支持JMockit的withCapture()功能，即捕捉某次测试中，某个类的某个方法的入参是什么，并记录下来。通常用于在验证代码块中，某个方法的入参是否符合期望。<br/><br/></p></li><li><p>Mock API<br/><br/></p></li></ol><p>@Mocked, @Tested ,@Injectable, @Capturing, MockUp, @Mock ,Expectations, Verifications这些API，通过前面基础知识，常见用法等的学习，这些API已经耳熟能详了吧。 基本能满足大部分的Mock场景了。</p><p><br/></p></div>
+		<script type="text/javascript">
+  	uParse('#articleContent', {
+	    rootPath: '/static/ueditor/'
+		})
+	</script>
+		
+	</div>
+	<!--/row-->
+</div>
+<!--/.fluid-container-->
+
+
+<hr>
+<footer>
+	<p>
+		<span>&copy; JMockit中文网 2017</span>&nbsp;<span><a href="showChannel.htm?channel=6">关于本站</a></span>&nbsp;<span><a href="static/images/coffee.png" target="_blank">打赏咖啡</a></span>
+	</p>
+</footer> 
+</body>
+</html>

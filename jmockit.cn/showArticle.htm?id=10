@@ -1,0 +1,179 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>JMockit中文网</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="icon" href="static/images/icon.jpg" type="image/jpg">
+<!-- Le styles -->
+<link href="static/bootstrap/css/bootstrap.css" rel="stylesheet">
+<style type="text/css">
+body {
+	padding-top: 60px;
+	padding-bottom: 40px;
+}
+
+.sidebar-nav {
+	padding: 9px 0;
+}
+
+@media ( max-width : 980px) {
+	/* Enable use of floated navbar text */
+	.navbar-text.pull-right {
+		float: none;
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+}
+#channelNav  li  {
+clear:none;
+}
+ 
+</style>
+<link href="static/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+
+<script type="text/javascript" src="static/ueditor/ueditor.parse.js"></script>
+<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+      <script src="/static/bootstrap/js/html5shiv.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+	<div class="navbar navbar-inverse navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+					<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+				</button>
+				<a class="brand" href="index.htm">JMockit中文网</a>
+				<div class="nav-collapse collapse">
+					<!-- 
+					<p class="navbar-text pull-right">
+						Logged in as <a href="#" class="navbar-link">Username</a>
+					</p>
+					 -->
+					<ul class="nav" id="channelNav">
+
+						
+							<li ><a href="showChannel.htm?channel=1">JMockit简介 </a></li>
+						
+							<li class="active"><a href="showChannel.htm?channel=2">JMockit基础 </a></li>
+						
+							<li ><a href="showChannel.htm?channel=3">JMockit常见用法 </a></li>
+						
+							<li ><a href="showChannel.htm?channel=4">JMockit高级用法 </a></li>
+						
+							<li ><a href="showChannel.htm?channel=5">JMockit原理剖析 </a></li>
+						
+						<li><a href="https://github.com/hzdavid/jmockit.cn/issues" target="_blank">交流社区</a></li>
+
+					</ul>
+				</div>
+				<!--/.nav-collapse -->
+			</div>
+		</div>
+	</div>
+<div class="container-fluid">
+	<div class="row-fluid">
+		
+			<div class="span3">
+				<div class="well sidebar-nav">
+					<ul class="nav nav-list">
+						
+							<li ><a href="showArticle.htm?id=3">JMockit配置 </a></li>
+						
+							<li ><a href="showArticle.htm?id=4">JMockit 程序结构 </a></li>
+						
+							<li ><a href="showArticle.htm?id=5">API:@Mocked </a></li>
+						
+							<li ><a href="showArticle.htm?id=6">API:@Tested & @Injectable </a></li>
+						
+							<li ><a href="showArticle.htm?id=7">API:@Capturing </a></li>
+						
+							<li ><a href="showArticle.htm?id=8">API:Expectations </a></li>
+						
+							<li ><a href="showArticle.htm?id=9">API:MockUp & @Mock </a></li>
+						
+							<li class="active"><a href="showArticle.htm?id=10">API:Verifications </a></li>
+						
+
+					</ul>
+				</div>
+			</div>
+		
+		<div class="span9 text-left" id="articleContent"><p style="white-space: normal;">Verifications是用于做验证。验证Mock对象（即@Moked/@Injectable@Capturing修饰的或传入Expectation构造函数的对象)有没有调用过某方法，调用了多少次。与Exceptations的写法相似。如下：</p><pre class="brush:java;toolbar:false">new&nbsp;Verifications()&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;这是一个Verifications匿名内部类
+&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;这是这个内部类的初始化代码块，我们在这里写验证脚本，脚本的格式要遵循下面的约定
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//方法调用(可是类的静态方法调用，也可以是对象的非静态方法调用)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//times/minTimes/maxTime&nbsp;表示调用次数的限定要求。赋值要紧跟在方法调用后面，也可以不写（表示只要调用过就行，不限次数）
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//...其它准备验证脚本的代码
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//方法调用
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//times/minTimes/maxTime赋值
+&nbsp;&nbsp;&nbsp;&nbsp;}
+};
+&nbsp;
+还可以再写new一个Verifications，只要出现在重放阶段之前均有效。
+new&nbsp;Verifications()&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//...录制脚本
+&nbsp;&nbsp;&nbsp;&nbsp;}
+};</pre><p style="white-space: normal;"><br/></p><p style="white-space: normal;">例子：</p><pre class="brush:java;toolbar:false">//Verification的使用
+public&nbsp;class&nbsp;VerificationTest&nbsp;{
+	@Test
+	public&nbsp;void&nbsp;testVerification()&nbsp;{
+		//&nbsp;录制阶段
+		Calendar&nbsp;cal&nbsp;=&nbsp;Calendar.getInstance();
+		new&nbsp;Expectations(Calendar.class)&nbsp;{
+			{
+				//&nbsp;对cal.get方法进行录制，并匹配参数&nbsp;Calendar.YEAR
+				cal.get(Calendar.YEAR);
+				result&nbsp;=&nbsp;2016;//&nbsp;年份不再返回当前小时。而是返回2016年
+				cal.get(Calendar.HOUR_OF_DAY);
+				result&nbsp;=&nbsp;7;//&nbsp;小时不再返回当前小时。而是返回早上7点钟
+			}
+		};
+		//&nbsp;重放阶段
+		Calendar&nbsp;now&nbsp;=&nbsp;Calendar.getInstance();
+		Assert.assertTrue(now.get(Calendar.YEAR)&nbsp;==&nbsp;2016);
+		Assert.assertTrue(now.get(Calendar.HOUR_OF_DAY)&nbsp;==&nbsp;7);
+		//&nbsp;验证阶段
+		new&nbsp;Verifications()&nbsp;{
+			{
+				Calendar.getInstance();
+				//&nbsp;限定上面的方法只调用了1次，当然也可以不限定
+				times&nbsp;=&nbsp;1;
+				cal.get(anyInt);
+				//&nbsp;限定上面的方法只调用了2次，当然也可以不限定
+				times&nbsp;=&nbsp;2;
+			}
+		};
+
+	}
+}</pre><p style="white-space: normal;"><br/></p><p style="white-space: normal;"><br/></p><p style="white-space: normal;">通常，在实际测试程序中，我们更倾向于通过JUnit/TestNG/SpringTest的Assert类对测试结果的验证， 对类的某个方法有没调用，调用多少次的测试场景并不是太多。因此在验证阶段，我们完全可以用JUnit/TestNG/SpringTest的Assert类取代new Verifications() {{}}验证代码块。</p><p style="white-space: normal;">除非，你的测试程序关心类的某个方法有没有调用，调用多少次，你可以使用new Verifications() {{}}验证代码块。</p><p style="white-space: normal;">如果你还关心方法的调用顺序，你可以使用new VerificationsInOrder() {{}} .这里就不做详细的介绍了。</p><p style="white-space: normal;"><br/></p></div>
+		<script type="text/javascript">
+  	uParse('#articleContent', {
+	    rootPath: '/static/ueditor/'
+		})
+	</script>
+		
+	</div>
+	<!--/row-->
+</div>
+<!--/.fluid-container-->
+
+
+<hr>
+<footer>
+	<p>
+		<span>&copy; JMockit中文网 2017</span>&nbsp;<span><a href="showChannel.htm?channel=6">关于本站</a></span>&nbsp;<span><a href="static/images/coffee.png" target="_blank">打赏咖啡</a></span>
+	</p>
+</footer> 
+</body>
+</html>

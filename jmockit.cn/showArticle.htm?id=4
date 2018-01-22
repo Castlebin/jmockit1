@@ -1,0 +1,181 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>JMockit中文网</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="icon" href="static/images/icon.jpg" type="image/jpg">
+<!-- Le styles -->
+<link href="static/bootstrap/css/bootstrap.css" rel="stylesheet">
+<style type="text/css">
+body {
+	padding-top: 60px;
+	padding-bottom: 40px;
+}
+
+.sidebar-nav {
+	padding: 9px 0;
+}
+
+@media ( max-width : 980px) {
+	/* Enable use of floated navbar text */
+	.navbar-text.pull-right {
+		float: none;
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+}
+#channelNav  li  {
+clear:none;
+}
+ 
+</style>
+<link href="static/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+
+<script type="text/javascript" src="static/ueditor/ueditor.parse.js"></script>
+<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+      <script src="/static/bootstrap/js/html5shiv.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+	<div class="navbar navbar-inverse navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+					<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+				</button>
+				<a class="brand" href="index.htm">JMockit中文网</a>
+				<div class="nav-collapse collapse">
+					<!-- 
+					<p class="navbar-text pull-right">
+						Logged in as <a href="#" class="navbar-link">Username</a>
+					</p>
+					 -->
+					<ul class="nav" id="channelNav">
+
+						
+							<li ><a href="showChannel.htm?channel=1">JMockit简介 </a></li>
+						
+							<li class="active"><a href="showChannel.htm?channel=2">JMockit基础 </a></li>
+						
+							<li ><a href="showChannel.htm?channel=3">JMockit常见用法 </a></li>
+						
+							<li ><a href="showChannel.htm?channel=4">JMockit高级用法 </a></li>
+						
+							<li ><a href="showChannel.htm?channel=5">JMockit原理剖析 </a></li>
+						
+						<li><a href="https://github.com/hzdavid/jmockit.cn/issues" target="_blank">交流社区</a></li>
+
+					</ul>
+				</div>
+				<!--/.nav-collapse -->
+			</div>
+		</div>
+	</div>
+<div class="container-fluid">
+	<div class="row-fluid">
+		
+			<div class="span3">
+				<div class="well sidebar-nav">
+					<ul class="nav nav-list">
+						
+							<li ><a href="showArticle.htm?id=3">JMockit配置 </a></li>
+						
+							<li class="active"><a href="showArticle.htm?id=4">JMockit 程序结构 </a></li>
+						
+							<li ><a href="showArticle.htm?id=5">API:@Mocked </a></li>
+						
+							<li ><a href="showArticle.htm?id=6">API:@Tested & @Injectable </a></li>
+						
+							<li ><a href="showArticle.htm?id=7">API:@Capturing </a></li>
+						
+							<li ><a href="showArticle.htm?id=8">API:Expectations </a></li>
+						
+							<li ><a href="showArticle.htm?id=9">API:MockUp & @Mock </a></li>
+						
+							<li ><a href="showArticle.htm?id=10">API:Verifications </a></li>
+						
+
+					</ul>
+				</div>
+			</div>
+		
+		<div class="span9 text-left" id="articleContent"><ol class=" list-paddingleft-2" style="list-style-type: decimal;"><li><p style="text-align: left;">通过一个例子来看JMockit的程序结构&nbsp;&nbsp;</p><pre class="brush:java;toolbar:false">//JMockit的程序结构
+public&nbsp;class&nbsp;ProgramConstructureTest&nbsp;{
+
+	//&nbsp;这是一个测试属性
+	@Mocked
+	HelloJMockit&nbsp;helloJMockit;
+
+	@Test
+	public&nbsp;void&nbsp;test1()&nbsp;{
+		//&nbsp;录制(Record)
+		new&nbsp;Expectations()&nbsp;{
+			{
+				helloJMockit.sayHello();
+				//&nbsp;期待上述调用的返回是&quot;hello,david&quot;，而不是返回&quot;hello,JMockit&quot;
+				result&nbsp;=&nbsp;&quot;hello,david&quot;;
+			}
+		};
+		//&nbsp;重放(Replay)
+		String&nbsp;msg&nbsp;=&nbsp;helloJMockit.sayHello();
+		Assert.assertTrue(msg.equals(&quot;hello,david&quot;));
+		//&nbsp;验证(Verification)
+		new&nbsp;Verifications()&nbsp;{
+			{
+				helloJMockit.sayHello();
+
+				times&nbsp;=&nbsp;1;
+			}
+		};
+	}
+
+	@Test
+	public&nbsp;void&nbsp;test2(@Mocked&nbsp;HelloJMockit&nbsp;helloJMockit&nbsp;/*&nbsp;这是一个测试参数&nbsp;*/)&nbsp;{
+		//&nbsp;录制(Record)
+		new&nbsp;Expectations()&nbsp;{
+			{
+				helloJMockit.sayHello();
+				//&nbsp;期待上述调用的返回是&quot;hello,david&quot;，而不是返回&quot;hello,JMockit&quot;
+				result&nbsp;=&nbsp;&quot;hello,david&quot;;
+			}
+		};
+		//&nbsp;重放(Replay)
+		String&nbsp;msg&nbsp;=&nbsp;helloJMockit.sayHello();
+		Assert.assertTrue(msg.equals(&quot;hello,david&quot;));
+		//&nbsp;验证(Verification)
+		new&nbsp;Verifications()&nbsp;{
+			{
+				helloJMockit.sayHello();
+				//&nbsp;验证helloJMockit.sayHello()这个方法调用了1次
+				times&nbsp;=&nbsp;1;
+			}
+		};
+	}
+}</pre><p><br/></p><p>通过上述例子可以看出，JMockit的程序结构包含了测试属性或测试参数，测试方法，测试方法体中又包含录制代码块，重放测试逻辑，验证代码块。&nbsp;</p></li><li><p style="text-align: left;">测试属性&amp;测试参数</p><p><br/>a)测试属性：即测试类的一个属性。它作用于测试类的所有测试方法。<br/>&nbsp; &nbsp; &nbsp; 在JMockit中，我们可以用JMockit的注解API来修饰它。这些API有@Mocked, @Tested, @Injectable,@Capturing。在上述例子中，我们用@Mocked修饰了测试属性HelloJMockit helloJMockit，表示helloJMockit这个测试属性，它的实例化，属性赋值，方法调用的返回值全部由JMockit来接管，接管后，helloJMockit的行为与HelloJMockit类定义的不一样了，而是由录制脚本来定义了。那@Mocked修饰后的helloJMockit，JMockit对它到底做了什么， 会在后续的章节中详细讲述。在这里，大家有个大致的了解就可以了。&nbsp;</p><p style="white-space: normal;"><br/>b)测试参数：即测试方法的参数。它仅作用于当前测试方法。</p><p style="white-space: normal;">给测试方法加参数，原本在JUnit中是不允许的，但是如果参数加了JMockit的注解API(@Mocked, @Tested, @Injectable,@Capturing)，则是允许的。<br/><br/><br/>测试参数与测试属性的不同，主要是作用域的不同。<br/><br/></p></li><li><p style="text-align: left;">Record-Replay-Verification<br/><br/>Record-Replay-Verification 是JMockit测试程序的主要结构。<br/>Record: 即先录制某类/对象的某个方法调用，在当输入什么时，返回什么。<br/>Replay: 即重放测试逻辑。<br/>Verification: 重放后的验证。比如验证某个方法有没有被调用，调用多少次。<br/><br/>其实，Record-Replay-Verification与JUnit程序的AAA(Arrange-Action-Assert)结构是一样的。<br/>Record对应Arrange，先准备一些测试数据，测试依赖。Replay对应Action，即执行测试逻辑。Verification对应Assert，即做测试验证。<br/><br/></p></li></ol><p>&nbsp; &nbsp; &nbsp;</p></div>
+		<script type="text/javascript">
+  	uParse('#articleContent', {
+	    rootPath: '/static/ueditor/'
+		})
+	</script>
+		
+	</div>
+	<!--/row-->
+</div>
+<!--/.fluid-container-->
+
+
+<hr>
+<footer>
+	<p>
+		<span>&copy; JMockit中文网 2017</span>&nbsp;<span><a href="showChannel.htm?channel=6">关于本站</a></span>&nbsp;<span><a href="static/images/coffee.png" target="_blank">打赏咖啡</a></span>
+	</p>
+</footer> 
+</body>
+</html>

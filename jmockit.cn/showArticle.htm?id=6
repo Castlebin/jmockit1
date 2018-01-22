@@ -1,0 +1,241 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>JMockit中文网</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="icon" href="static/images/icon.jpg" type="image/jpg">
+<!-- Le styles -->
+<link href="static/bootstrap/css/bootstrap.css" rel="stylesheet">
+<style type="text/css">
+body {
+	padding-top: 60px;
+	padding-bottom: 40px;
+}
+
+.sidebar-nav {
+	padding: 9px 0;
+}
+
+@media ( max-width : 980px) {
+	/* Enable use of floated navbar text */
+	.navbar-text.pull-right {
+		float: none;
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+}
+#channelNav  li  {
+clear:none;
+}
+ 
+</style>
+<link href="static/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+
+<script type="text/javascript" src="static/ueditor/ueditor.parse.js"></script>
+<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+      <script src="/static/bootstrap/js/html5shiv.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+	<div class="navbar navbar-inverse navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+					<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+				</button>
+				<a class="brand" href="index.htm">JMockit中文网</a>
+				<div class="nav-collapse collapse">
+					<!-- 
+					<p class="navbar-text pull-right">
+						Logged in as <a href="#" class="navbar-link">Username</a>
+					</p>
+					 -->
+					<ul class="nav" id="channelNav">
+
+						
+							<li ><a href="showChannel.htm?channel=1">JMockit简介 </a></li>
+						
+							<li class="active"><a href="showChannel.htm?channel=2">JMockit基础 </a></li>
+						
+							<li ><a href="showChannel.htm?channel=3">JMockit常见用法 </a></li>
+						
+							<li ><a href="showChannel.htm?channel=4">JMockit高级用法 </a></li>
+						
+							<li ><a href="showChannel.htm?channel=5">JMockit原理剖析 </a></li>
+						
+						<li><a href="https://github.com/hzdavid/jmockit.cn/issues" target="_blank">交流社区</a></li>
+
+					</ul>
+				</div>
+				<!--/.nav-collapse -->
+			</div>
+		</div>
+	</div>
+<div class="container-fluid">
+	<div class="row-fluid">
+		
+			<div class="span3">
+				<div class="well sidebar-nav">
+					<ul class="nav nav-list">
+						
+							<li ><a href="showArticle.htm?id=3">JMockit配置 </a></li>
+						
+							<li ><a href="showArticle.htm?id=4">JMockit 程序结构 </a></li>
+						
+							<li ><a href="showArticle.htm?id=5">API:@Mocked </a></li>
+						
+							<li class="active"><a href="showArticle.htm?id=6">API:@Tested & @Injectable </a></li>
+						
+							<li ><a href="showArticle.htm?id=7">API:@Capturing </a></li>
+						
+							<li ><a href="showArticle.htm?id=8">API:Expectations </a></li>
+						
+							<li ><a href="showArticle.htm?id=9">API:MockUp & @Mock </a></li>
+						
+							<li ><a href="showArticle.htm?id=10">API:Verifications </a></li>
+						
+
+					</ul>
+				</div>
+			</div>
+		
+		<div class="span9 text-left" id="articleContent"><ol class=" list-paddingleft-2" style="width: 1073.5px; white-space: normal;"><li><p>@Injectable 与 @Mocked的不同</p></li><pre class="brush:java;toolbar:false">//@Mocked与@Injectable的不同
+public&nbsp;class&nbsp;MockedAndInjectable&nbsp;{
+
+	@Test
+	public&nbsp;void&nbsp;testMocked(@Mocked&nbsp;Locale&nbsp;locale)&nbsp;{
+		//&nbsp;静态方法不起作用了,返回了null
+		Assert.assertTrue(Locale.getDefault()&nbsp;==&nbsp;null);
+		//&nbsp;非静态方法（返回类型为String）也不起作用了，返回了null
+		Assert.assertTrue(locale.getCountry()&nbsp;==&nbsp;null);
+		//&nbsp;自已new一个，也同样如此，方法都被mock了
+		Locale&nbsp;chinaLocale&nbsp;=&nbsp;new&nbsp;Locale(&quot;zh&quot;,&nbsp;&quot;CN&quot;);
+		Assert.assertTrue(chinaLocale.getCountry()&nbsp;==&nbsp;null);
+	}
+
+	@Test
+	public&nbsp;void&nbsp;testInjectable(@Injectable&nbsp;Locale&nbsp;locale)&nbsp;{
+		//&nbsp;静态方法不mock
+		Assert.assertTrue(Locale.getDefault()&nbsp;!=&nbsp;null);
+		//&nbsp;非静态方法（返回类型为String）也不起作用了，返回了null,但仅仅限于locale这个对象
+		Assert.assertTrue(locale.getCountry()&nbsp;==&nbsp;null);
+		//&nbsp;自已new一个，并不受影响
+		Locale&nbsp;chinaLocale&nbsp;=&nbsp;new&nbsp;Locale(&quot;zh&quot;,&nbsp;&quot;CN&quot;);
+		Assert.assertTrue(chinaLocale.getCountry().equals(&quot;CN&quot;));
+	}
+}</pre><p><br/>@Injectable 也是告诉 JMockit生成一个Mocked对象，但@Injectable只是针对其修饰的实例，而@Mocked是针对其修饰类的所有实例。<br/>此外，@Injectable对类的静态方法，构造函数没有影响。因为它只影响某一个实例嘛！<br/><br/></p><li><p>@Tested &amp; @Injectable 两个好基友，通常搭配使用</p><p>为便于演示，我们以电商网站下订单的场景为例：在买家下订单时，电商网站后台程序需要校验买家的身份（是否合法，例如是否在黑名单中），<br/>若下订单没有问题还要发邮件给买家。&nbsp; &nbsp; 相信下面的代码，你一定能看明白 。</p></li><pre class="brush:java;toolbar:false">//&nbsp;邮件服务类，用于发邮件
+public&nbsp;interface&nbsp;MailService&nbsp;{
+
+	/**
+	&nbsp;*&nbsp;发送邮件
+	&nbsp;*&nbsp;
+	&nbsp;*&nbsp;@param&nbsp;userId
+	&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;邮件接受人id
+	&nbsp;*&nbsp;@param&nbsp;content
+	&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;邮件内容
+	&nbsp;*&nbsp;@return&nbsp;发送成功了，就返回true,否则返回false
+	&nbsp;*/
+	public&nbsp;boolean&nbsp;sendMail(long&nbsp;userId,&nbsp;String&nbsp;content);
+}</pre><pre class="brush:java;toolbar:false;">//&nbsp;用户身份校验&nbsp;&nbsp;
+public&nbsp;interface&nbsp;UserCheckService&nbsp;{
+
+	/**
+	&nbsp;*&nbsp;校验某个用户是否是合法用户
+	&nbsp;*&nbsp;
+	&nbsp;*&nbsp;@param&nbsp;userId
+	&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;用户ID
+	&nbsp;*&nbsp;@return&nbsp;合法的就返回true,否则返回false&nbsp;
+	&nbsp;*/
+	public&nbsp;boolean&nbsp;check(long&nbsp;userId);
+}//订单服务类&nbsp;,用于下订单</pre><pre class="brush:java;toolbar:false;">public&nbsp;class&nbsp;OrderService&nbsp;{
+	//&nbsp;邮件服务类，用于向某用户发邮件。
+	MailService&nbsp;mailService;
+	//&nbsp;用户身份校验类，用于校验某个用户是不是合法用户
+	@Resource
+	UserCheckService&nbsp;userCheckService;
+
+	//&nbsp;构造函数
+	public&nbsp;OrderService(MailService&nbsp;mailService)&nbsp;{
+		this.mailService&nbsp;=&nbsp;mailService;
+	}
+
+	/**
+	&nbsp;*&nbsp;下订单
+	&nbsp;*&nbsp;
+	&nbsp;*&nbsp;@param&nbsp;buyerId
+	&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;买家ID
+	&nbsp;*&nbsp;@param&nbsp;itemId
+	&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;商品id
+	&nbsp;*&nbsp;@return&nbsp;返回&nbsp;下订单是否成功
+	&nbsp;*/
+	public&nbsp;boolean&nbsp;submitOrder(long&nbsp;buyerId,&nbsp;long&nbsp;itemId)&nbsp;{
+		//&nbsp;先校验用户身份
+		if&nbsp;(!userCheckService.check(buyerId))&nbsp;{
+			//&nbsp;用户身份不合法
+			return&nbsp;false;
+		}
+		//&nbsp;下单逻辑代码，
+		//&nbsp;省略...
+		//&nbsp;下单完成，给买家发邮件
+		if&nbsp;(!this.mailService.sendMail(buyerId,&nbsp;&quot;下单成功&quot;))&nbsp;{
+			//&nbsp;邮件发送成功
+			return&nbsp;false;
+		}
+		return&nbsp;true;
+	}
+}</pre><p>假设现在我们需要测试OrderService类的submitOrder方法，可是OrderService依赖MailService,UserCheckService类，<br/>在测试过程中，我们并不想真正连结邮件服务器，也不想连结校验用户身份的服务器校验用户身份，怎么办呢？ <br/>此时@Tested与@Injectable就排上用场了！请看下面的测试程序：</p><pre class="brush:java;toolbar:false;">&nbsp;&nbsp;&nbsp;&nbsp;//@Tested与@Injectable搭配使用
+public&nbsp;class&nbsp;TestedAndInjectable&nbsp;{
+&nbsp;&nbsp;&nbsp;//@Tested修饰的类，表示是我们要测试对象,在这里表示，我想测试订单服务类。JMockit也会帮我们实例化这个测试对象
+&nbsp;&nbsp;&nbsp;@Tested
+&nbsp;&nbsp;&nbsp;OrderService&nbsp;orderService;
+&nbsp;&nbsp;&nbsp;//测试用户ID
+&nbsp;&nbsp;&nbsp;long&nbsp;testUserId&nbsp;=&nbsp;123456l;
+&nbsp;&nbsp;&nbsp;//测试商品id
+&nbsp;&nbsp;&nbsp;long&nbsp;testItemId&nbsp;=&nbsp;456789l;
+
+&nbsp;&nbsp;&nbsp;//&nbsp;测试注入方式
+&nbsp;&nbsp;&nbsp;@Test
+&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;testSubmitOrder(@Injectable&nbsp;MailService&nbsp;mailService,&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@Injectable&nbsp;UserCheckService&nbsp;userCheckService)&nbsp;{
+	new&nbsp;Expectations()&nbsp;{
+	&nbsp;&nbsp;&nbsp;{
+		&nbsp;//&nbsp;当向testUserId发邮件时，假设都发成功了
+		&nbsp;mailService.sendMail(testUserId,&nbsp;anyString);
+		&nbsp;result&nbsp;=&nbsp;true;
+		//&nbsp;当检验testUserId的身份时，假设该用户都是合法的
+		&nbsp;userCheckService.check(testUserId);
+		result&nbsp;=&nbsp;true;
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;};
+	//&nbsp;JMockit帮我们实例化了mailService了，并通过OrderService的构造函数，注入到orderService对象中。&nbsp;
+	//JMockit帮我们实例化了userCheckService了，并通过OrderService的属性，注入到orderService对象中。&nbsp;
+	Assert.assertTrue(orderService.submitOrder(testUserId,&nbsp;testItemId));
+&nbsp;&nbsp;&nbsp;&nbsp;}
+}</pre><li><p>@Tested &amp; @Injectable功能总结<br/><br/>@Injectable 也表示一个Mocked对象，相比@Mocked，只不过只影响类的一个实例。而@Mocked默认是影响类的所有实例。<br/>@Tested表示被测试对象。如果该对象没有赋值，JMockit会去实例化它，若@Tested的构造函数有参数，<br/>则JMockit通过在测试属性&amp;测试参数中查找@Injectable修饰的Mocked对象注入@Tested对象的构造函数来实例化，<br/>不然，则用无参构造函数来实例化。除了构造函数的注入，JMockit还会通过属性查找的方式，把@Injectable对象注入到@Tested对象中。<br/>&nbsp;注入的匹配规则：先类型，再名称(构造函数参数名，类的属性名)。若找到多个可以注入的@Injectable，则选择最优先定义的@Injectable对象。<br/>当然，我们的测试程序要尽量避免这种情况出现。因为给哪个测试属性/测试参数加@Injectable，是人为控制的。<br/><br/></p></li><li><p>什么测试场景，我们要使用@Tested &amp; @Injectable&nbsp;<br/></p></li></ol><p style="white-space: normal;">&nbsp; &nbsp; &nbsp;显然，当我们需要手工管理被测试类的依赖时,就需要用到@Tested &amp; @Injectable。<br/>&nbsp; &nbsp; &nbsp;两者搭配起来用，JMockit就能帮我们轻松搞定被测试类及其依赖注入细节。<br/></p><p><br/></p></div>
+		<script type="text/javascript">
+  	uParse('#articleContent', {
+	    rootPath: '/static/ueditor/'
+		})
+	</script>
+		
+	</div>
+	<!--/row-->
+</div>
+<!--/.fluid-container-->
+
+
+<hr>
+<footer>
+	<p>
+		<span>&copy; JMockit中文网 2017</span>&nbsp;<span><a href="showChannel.htm?channel=6">关于本站</a></span>&nbsp;<span><a href="static/images/coffee.png" target="_blank">打赏咖啡</a></span>
+	</p>
+</footer> 
+</body>
+</html>

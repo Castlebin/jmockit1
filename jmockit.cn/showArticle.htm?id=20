@@ -1,0 +1,184 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>JMockit中文网</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="icon" href="static/images/icon.jpg" type="image/jpg">
+<!-- Le styles -->
+<link href="static/bootstrap/css/bootstrap.css" rel="stylesheet">
+<style type="text/css">
+body {
+	padding-top: 60px;
+	padding-bottom: 40px;
+}
+
+.sidebar-nav {
+	padding: 9px 0;
+}
+
+@media ( max-width : 980px) {
+	/* Enable use of floated navbar text */
+	.navbar-text.pull-right {
+		float: none;
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+}
+#channelNav  li  {
+clear:none;
+}
+ 
+</style>
+<link href="static/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+
+<script type="text/javascript" src="static/ueditor/ueditor.parse.js"></script>
+<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+      <script src="/static/bootstrap/js/html5shiv.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+	<div class="navbar navbar-inverse navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+					<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+				</button>
+				<a class="brand" href="index.htm">JMockit中文网</a>
+				<div class="nav-collapse collapse">
+					<!-- 
+					<p class="navbar-text pull-right">
+						Logged in as <a href="#" class="navbar-link">Username</a>
+					</p>
+					 -->
+					<ul class="nav" id="channelNav">
+
+						
+							<li ><a href="showChannel.htm?channel=1">JMockit简介 </a></li>
+						
+							<li ><a href="showChannel.htm?channel=2">JMockit基础 </a></li>
+						
+							<li ><a href="showChannel.htm?channel=3">JMockit常见用法 </a></li>
+						
+							<li ><a href="showChannel.htm?channel=4">JMockit高级用法 </a></li>
+						
+							<li class="active"><a href="showChannel.htm?channel=5">JMockit原理剖析 </a></li>
+						
+						<li><a href="https://github.com/hzdavid/jmockit.cn/issues" target="_blank">交流社区</a></li>
+
+					</ul>
+				</div>
+				<!--/.nav-collapse -->
+			</div>
+		</div>
+	</div>
+<div class="container-fluid">
+	<div class="row-fluid">
+		
+			<div class="span3">
+				<div class="well sidebar-nav">
+					<ul class="nav nav-list">
+						
+							<li ><a href="showArticle.htm?id=16">JMockit架构 </a></li>
+						
+							<li ><a href="showArticle.htm?id=19">JMockit启动过程 </a></li>
+						
+							<li class="active"><a href="showArticle.htm?id=20">Exepectations录制原理 </a></li>
+						
+							<li ><a href="showArticle.htm?id=21">MockUp的Mock原理 </a></li>
+						
+
+					</ul>
+				</div>
+			</div>
+		
+		<div class="span9 text-left" id="articleContent"><p>Exepectations的使用频率太高了，我们用它来录制调用以及调用返回结果。可是它背后是怎么工作的呢。</p><p>以<a href="showArticle.htm?id=2" target="_blank">如何对类Mock</a>中提到测试ClassMockingByExpectationsTest为例，在这个测试程序中，我们对AnOrdinaryClass进行了Mock，</p><p>那JMockit到底对AnOrdinaryClass重定义后的类是什么样子呢？ 通过一些反编译工具，我们抓取到的反编译代码如下：</p><p><br/></p><pre class="brush:java;toolbar:false">public&nbsp;class&nbsp;AnOrdinaryClass&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;AnOrdinaryClass()&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(RecordAndReplayExecution.recordOrReplay(this,&nbsp;1,&nbsp;&quot;cn/jmockit/demos/AnOrdinaryClass&quot;,&nbsp;&quot;&lt;init&gt;()V&quot;,&nbsp;(String)null,&nbsp;1,&nbsp;(Object[])null)&nbsp;==&nbsp;Void.class)&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TestRun.lineExecuted(0,&nbsp;4);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;}
+
+&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;static&nbsp;int&nbsp;staticMethod()&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Object&nbsp;var10000&nbsp;=&nbsp;RecordAndReplayExecution.recordOrReplay((Object)null,&nbsp;9,&nbsp;&quot;cn/jmockit/demos/AnOrdinaryClass&quot;,&nbsp;&quot;staticMethod()I&quot;,&nbsp;(String)null,&nbsp;1,&nbsp;(Object[])null);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(var10000&nbsp;!=&nbsp;Void.class)&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;(Integer)var10000;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;else&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TestRun.lineExecuted(0,&nbsp;7);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;1;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;}
+
+&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;int&nbsp;ordinaryMethod()&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Object&nbsp;var10000&nbsp;=&nbsp;RecordAndReplayExecution.recordOrReplay(this,&nbsp;1,&nbsp;&quot;cn/jmockit/demos/AnOrdinaryClass&quot;,&nbsp;&quot;ordinaryMethod()I&quot;,&nbsp;(String)null,&nbsp;1,&nbsp;(Object[])null);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(var10000&nbsp;!=&nbsp;Void.class)&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;(Integer)var10000;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;else&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TestRun.lineExecuted(0,&nbsp;12);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;2;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;}
+
+&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;final&nbsp;int&nbsp;finalMethod()&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Object&nbsp;var10000&nbsp;=&nbsp;RecordAndReplayExecution.recordOrReplay(this,&nbsp;17,&nbsp;&quot;cn/jmockit/demos/AnOrdinaryClass&quot;,&nbsp;&quot;finalMethod()I&quot;,&nbsp;(String)null,&nbsp;1,&nbsp;(Object[])null);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(var10000&nbsp;!=&nbsp;Void.class)&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;(Integer)var10000;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;else&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TestRun.lineExecuted(0,&nbsp;17);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;3;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;}
+
+&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;native&nbsp;int&nbsp;navtiveMethod();
+
+&nbsp;&nbsp;&nbsp;&nbsp;private&nbsp;int&nbsp;privateMethod()&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TestRun.lineExecuted(0,&nbsp;25);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;5;
+&nbsp;&nbsp;&nbsp;&nbsp;}
+
+&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;int&nbsp;callPrivateMethod()&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Object&nbsp;var10000&nbsp;=&nbsp;RecordAndReplayExecution.recordOrReplay(this,&nbsp;1,&nbsp;&quot;cn/jmockit/demos/AnOrdinaryClass&quot;,&nbsp;&quot;callPrivateMethod()I&quot;,&nbsp;(String)null,&nbsp;1,&nbsp;(Object[])null);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(var10000&nbsp;!=&nbsp;Void.class)&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;(Integer)var10000;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;else&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TestRun.lineExecuted(0,&nbsp;30);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;this.privateMethod();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;}
+}</pre><p><br/></p><p><br/></p><p>我们发现，每一个方法除了native，方法的第一行都置入一行调用：RecordAndReplayExecution.recordOrReplay。</p><p>因此，录制和重放的奥秘就封装在这个方法RecordAndReplayExecution.recordOrReplay中啦。下面我们重点分析下RecordAndReplayExecution.recordOrReplay这个方法到底做了什么事情。</p><p>方法定义如下，感兴趣的同学，也可以下载JMockit的源代码，找到RecordAndReplayExecution.recordOrReplay这个方法</p><pre class="brush:java;toolbar:false">	/**
+	&nbsp;*&nbsp;&nbsp;
+	&nbsp;*&nbsp;@param&nbsp;mock:即Expectation/Verfication脚本中是Mock对象/类，
+	&nbsp;*&nbsp;@param&nbsp;classDesc：即Expectation/Verfication脚本中是Mock对象/类的描述
+	&nbsp;*&nbsp;@param&nbsp;mockDesc：&nbsp;即录制/重放/验证的方法的描述&nbsp;&nbsp;&nbsp;
+	&nbsp;&nbsp;&nbsp;@executionModeOrdinal:&nbsp;ExecutionMode.Regular(如果是mocked)&nbsp;ExecutionMode.PerInstance(如果是Injectable)
+	&nbsp;&nbsp;&nbsp;@param&nbsp;args&nbsp;即录制/重放/验证的方法的入参
+	&nbsp;*/
+	public&nbsp;static&nbsp;Object&nbsp;recordOrReplay(@Nullable&nbsp;Object&nbsp;mock,&nbsp;int&nbsp;mockAccess,&nbsp;@Nonnull&nbsp;String&nbsp;classDesc,&nbsp;
+	@Nonnull&nbsp;String&nbsp;mockDesc,&nbsp;
+	@Nullable&nbsp;String&nbsp;genericSignature,&nbsp;int&nbsp;executionModeOrdinal,&nbsp;@Nullable&nbsp;Object[]&nbsp;args)&nbsp;throws&nbsp;Throwable&nbsp;{</pre><p><br/></p><p><br/></p><p><img src="static/images/recordOrReplay.jpg"/></p><p><br/>看到了没，通过不同测试阶段RecordPhase（录制阶段），ReplayPhase（重放阶段），BaseVerificationPhase（校验阶段）对调用的记录，执行，验证，一环扣一环地，就实现了JMockit录制，回放，验证的程序逻辑。<br/><br/>RecordAndReplayExecution.recordOrReplay的代码建议您多看看。对JMockit程序会有更清楚的认识。</p><p><br/></p><p><br/></p><p><br/></p><p><br/></p></div>
+		<script type="text/javascript">
+  	uParse('#articleContent', {
+	    rootPath: '/static/ueditor/'
+		})
+	</script>
+		
+	</div>
+	<!--/row-->
+</div>
+<!--/.fluid-container-->
+
+
+<hr>
+<footer>
+	<p>
+		<span>&copy; JMockit中文网 2017</span>&nbsp;<span><a href="showChannel.htm?channel=6">关于本站</a></span>&nbsp;<span><a href="static/images/coffee.png" target="_blank">打赏咖啡</a></span>
+	</p>
+</footer> 
+</body>
+</html>

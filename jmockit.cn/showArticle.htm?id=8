@@ -1,0 +1,217 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>JMockit中文网</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="icon" href="static/images/icon.jpg" type="image/jpg">
+<!-- Le styles -->
+<link href="static/bootstrap/css/bootstrap.css" rel="stylesheet">
+<style type="text/css">
+body {
+	padding-top: 60px;
+	padding-bottom: 40px;
+}
+
+.sidebar-nav {
+	padding: 9px 0;
+}
+
+@media ( max-width : 980px) {
+	/* Enable use of floated navbar text */
+	.navbar-text.pull-right {
+		float: none;
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+}
+#channelNav  li  {
+clear:none;
+}
+ 
+</style>
+<link href="static/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+
+<script type="text/javascript" src="static/ueditor/ueditor.parse.js"></script>
+<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+      <script src="/static/bootstrap/js/html5shiv.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+	<div class="navbar navbar-inverse navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+					<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+				</button>
+				<a class="brand" href="index.htm">JMockit中文网</a>
+				<div class="nav-collapse collapse">
+					<!-- 
+					<p class="navbar-text pull-right">
+						Logged in as <a href="#" class="navbar-link">Username</a>
+					</p>
+					 -->
+					<ul class="nav" id="channelNav">
+
+						
+							<li ><a href="showChannel.htm?channel=1">JMockit简介 </a></li>
+						
+							<li class="active"><a href="showChannel.htm?channel=2">JMockit基础 </a></li>
+						
+							<li ><a href="showChannel.htm?channel=3">JMockit常见用法 </a></li>
+						
+							<li ><a href="showChannel.htm?channel=4">JMockit高级用法 </a></li>
+						
+							<li ><a href="showChannel.htm?channel=5">JMockit原理剖析 </a></li>
+						
+						<li><a href="https://github.com/hzdavid/jmockit.cn/issues" target="_blank">交流社区</a></li>
+
+					</ul>
+				</div>
+				<!--/.nav-collapse -->
+			</div>
+		</div>
+	</div>
+<div class="container-fluid">
+	<div class="row-fluid">
+		
+			<div class="span3">
+				<div class="well sidebar-nav">
+					<ul class="nav nav-list">
+						
+							<li ><a href="showArticle.htm?id=3">JMockit配置 </a></li>
+						
+							<li ><a href="showArticle.htm?id=4">JMockit 程序结构 </a></li>
+						
+							<li ><a href="showArticle.htm?id=5">API:@Mocked </a></li>
+						
+							<li ><a href="showArticle.htm?id=6">API:@Tested & @Injectable </a></li>
+						
+							<li ><a href="showArticle.htm?id=7">API:@Capturing </a></li>
+						
+							<li class="active"><a href="showArticle.htm?id=8">API:Expectations </a></li>
+						
+							<li ><a href="showArticle.htm?id=9">API:MockUp & @Mock </a></li>
+						
+							<li ><a href="showArticle.htm?id=10">API:Verifications </a></li>
+						
+
+					</ul>
+				</div>
+			</div>
+		
+		<div class="span9 text-left" id="articleContent"><p>通过上面的例子，我们已经了解了Expectations的作用主要是用于录制。即录制类/对象的调用，返回值是什么。</p><p>录制脚本规范</p><pre class="brush:java;toolbar:false">new&nbsp;Expectations()&nbsp;{
+	//&nbsp;这是一个Expectations匿名内部类
+	{
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;这是这个内部类的初始化代码块，我们在这里写录制脚本，脚本的格式要遵循下面的约定
+		//方法调用(可是类的静态方法调用，也可以是对象的非静态方法调用)
+		//result赋值要紧跟在方法调用后面
+		//...其它准备录制脚本的代码
+		//方法调用
+		//result赋值
+	}
+};
+
+还可以再写new一个Expectations，只要出现在重放阶段之前均有效。
+new&nbsp;Expectations()&nbsp;{
+	&nbsp;
+	{
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//...录制脚本
+	}
+};</pre><p>Expectations主要有两种使用方式。</p><ol class=" list-paddingleft-2" style="list-style-type: decimal;"><li><p>通过引用外部类的Mock对象(@Injectabe,@Mocked,@Capturing)来录制</p></li><pre class="brush:java;toolbar:false">//Expectations对外部类的mock对象进行录制
+public&nbsp;class&nbsp;ExpectationsTest&nbsp;{
+	@Mocked
+	Calendar&nbsp;cal;
+
+	@Test
+	public&nbsp;void&nbsp;testRecordOutside()&nbsp;{
+		new&nbsp;Expectations()&nbsp;{
+			{
+				//&nbsp;对cal.get方法进行录制，并匹配参数&nbsp;Calendar.YEAR
+				cal.get(Calendar.YEAR);
+				result&nbsp;=&nbsp;2016;//&nbsp;年份不再返回当前小时。而是返回2016年
+				//&nbsp;对cal.get方法进行录制，并匹配参数&nbsp;Calendar.HOUR_OF_DAY
+				cal.get(Calendar.HOUR_OF_DAY);
+				result&nbsp;=&nbsp;7;//&nbsp;小时不再返回当前小时。而是返回早上7点钟
+			}
+		};
+		Assert.assertTrue(cal.get(Calendar.YEAR)&nbsp;==&nbsp;2016);
+		Assert.assertTrue(cal.get(Calendar.HOUR_OF_DAY)&nbsp;==&nbsp;7);
+		//&nbsp;因为没有录制过，所以这里月份返回默认值&nbsp;0
+		Assert.assertTrue(cal.get(Calendar.DAY_OF_MONTH)&nbsp;==&nbsp;0);
+	}
+
+}</pre><p><br/>在这个例子中，在Expectations匿名内部类的初始代码块中，我们可以对外部类的任意成员变量，方法进行调用。大大便利我们书写录制脚本。<br/><br/></p><li><p>通过构建函数注入类/对象来录制</p><p>在上面的例子中，我们通过引用外部类的Mock对象(@Injectabe,@Mocked,@Capturing)来录制，可是无论是@Injectabe,@Mocked,@Capturing哪种Mock对象，都是对类的方法都mock了，可是有时候，我们只希望JMockit只mock类/对象的某一个方法。怎么办？ 看下面的例子就明白啦。</p></li></ol><pre class="brush:java;toolbar:false">//通过Expectations对其构造函数mock对象进行录制
+public&nbsp;class&nbsp;ExpectationsConstructorTest2&nbsp;{
+
+	//&nbsp;把类传入Expectations的构造函数
+	@Test
+	public&nbsp;void&nbsp;testRecordConstrutctor1()&nbsp;{
+		Calendar&nbsp;cal&nbsp;=&nbsp;Calendar.getInstance();
+		//&nbsp;把待Mock的类传入Expectations的构造函数，可以达到只mock类的部分行为的目的
+		new&nbsp;Expectations(Calendar.class)&nbsp;{
+			{
+				//&nbsp;只对get方法并且参数为Calendar.HOUR_OF_DAY进行录制
+				cal.get(Calendar.HOUR_OF_DAY);
+				result&nbsp;=&nbsp;7;//&nbsp;小时永远返回早上7点钟
+			}
+		};
+		Calendar&nbsp;now&nbsp;=&nbsp;Calendar.getInstance();
+		//&nbsp;因为下面的调用mock过了，小时永远返回7点钟了
+		Assert.assertTrue(now.get(Calendar.HOUR_OF_DAY)&nbsp;==&nbsp;7);
+		//&nbsp;因为下面的调用没有mock过，所以方法的行为不受mock影响，
+		Assert.assertTrue(now.get(Calendar.DAY_OF_MONTH)&nbsp;==&nbsp;(new&nbsp;Date()).getDate());
+	}
+
+	//&nbsp;把对象传入Expectations的构造函数
+	@Test
+	public&nbsp;void&nbsp;testRecordConstrutctor2()&nbsp;{
+		Calendar&nbsp;cal&nbsp;=&nbsp;Calendar.getInstance();
+		//&nbsp;把待Mock的对象传入Expectations的构造函数，可以达到只mock类的部分行为的目的，但只对这个对象影响
+		new&nbsp;Expectations(cal)&nbsp;{
+			{
+				//&nbsp;只对get方法并且参数为Calendar.HOUR_OF_DAY进行录制
+				cal.get(Calendar.HOUR_OF_DAY);
+				result&nbsp;=&nbsp;7;//&nbsp;小时永远返回早上7点钟
+			}
+		};
+
+		//&nbsp;因为下面的调用mock过了，小时永远返回7点钟了
+		Assert.assertTrue(cal.get(Calendar.HOUR_OF_DAY)&nbsp;==&nbsp;7);
+		//&nbsp;因为下面的调用没有mock过，所以方法的行为不受mock影响，
+		Assert.assertTrue(cal.get(Calendar.DAY_OF_MONTH)&nbsp;==&nbsp;(new&nbsp;Date()).getDate());
+
+		//&nbsp;now是另一个对象，上面录制只对cal对象的影响，所以now的方法行为没有任何变化
+		Calendar&nbsp;now&nbsp;=&nbsp;Calendar.getInstance();
+		//&nbsp;不受mock影响
+		Assert.assertTrue(now.get(Calendar.HOUR_OF_DAY)&nbsp;==&nbsp;(new&nbsp;Date()).getHours());
+		//&nbsp;不受mock影响
+		Assert.assertTrue(now.get(Calendar.DAY_OF_MONTH)&nbsp;==&nbsp;(new&nbsp;Date()).getDate());
+	}
+}</pre><p><br/></p><p><br/></p></div>
+		<script type="text/javascript">
+  	uParse('#articleContent', {
+	    rootPath: '/static/ueditor/'
+		})
+	</script>
+		
+	</div>
+	<!--/row-->
+</div>
+<!--/.fluid-container-->
+
+
+<hr>
+<footer>
+	<p>
+		<span>&copy; JMockit中文网 2017</span>&nbsp;<span><a href="showChannel.htm?channel=6">关于本站</a></span>&nbsp;<span><a href="static/images/coffee.png" target="_blank">打赏咖啡</a></span>
+	</p>
+</footer> 
+</body>
+</html>

@@ -1,0 +1,188 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>JMockit中文网</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="icon" href="static/images/icon.jpg" type="image/jpg">
+<!-- Le styles -->
+<link href="static/bootstrap/css/bootstrap.css" rel="stylesheet">
+<style type="text/css">
+body {
+	padding-top: 60px;
+	padding-bottom: 40px;
+}
+
+.sidebar-nav {
+	padding: 9px 0;
+}
+
+@media ( max-width : 980px) {
+	/* Enable use of floated navbar text */
+	.navbar-text.pull-right {
+		float: none;
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+}
+#channelNav  li  {
+clear:none;
+}
+ 
+</style>
+<link href="static/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+
+<script type="text/javascript" src="static/ueditor/ueditor.parse.js"></script>
+<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+      <script src="/static/bootstrap/js/html5shiv.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+	<div class="navbar navbar-inverse navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+					<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+				</button>
+				<a class="brand" href="index.htm">JMockit中文网</a>
+				<div class="nav-collapse collapse">
+					<!-- 
+					<p class="navbar-text pull-right">
+						Logged in as <a href="#" class="navbar-link">Username</a>
+					</p>
+					 -->
+					<ul class="nav" id="channelNav">
+
+						
+							<li ><a href="showChannel.htm?channel=1">JMockit简介 </a></li>
+						
+							<li class="active"><a href="showChannel.htm?channel=2">JMockit基础 </a></li>
+						
+							<li ><a href="showChannel.htm?channel=3">JMockit常见用法 </a></li>
+						
+							<li ><a href="showChannel.htm?channel=4">JMockit高级用法 </a></li>
+						
+							<li ><a href="showChannel.htm?channel=5">JMockit原理剖析 </a></li>
+						
+						<li><a href="https://github.com/hzdavid/jmockit.cn/issues" target="_blank">交流社区</a></li>
+
+					</ul>
+				</div>
+				<!--/.nav-collapse -->
+			</div>
+		</div>
+	</div>
+<div class="container-fluid">
+	<div class="row-fluid">
+		
+			<div class="span3">
+				<div class="well sidebar-nav">
+					<ul class="nav nav-list">
+						
+							<li ><a href="showArticle.htm?id=3">JMockit配置 </a></li>
+						
+							<li ><a href="showArticle.htm?id=4">JMockit 程序结构 </a></li>
+						
+							<li ><a href="showArticle.htm?id=5">API:@Mocked </a></li>
+						
+							<li ><a href="showArticle.htm?id=6">API:@Tested & @Injectable </a></li>
+						
+							<li class="active"><a href="showArticle.htm?id=7">API:@Capturing </a></li>
+						
+							<li ><a href="showArticle.htm?id=8">API:Expectations </a></li>
+						
+							<li ><a href="showArticle.htm?id=9">API:MockUp & @Mock </a></li>
+						
+							<li ><a href="showArticle.htm?id=10">API:Verifications </a></li>
+						
+
+					</ul>
+				</div>
+			</div>
+		
+		<div class="span9 text-left" id="articleContent"><ol class=" list-paddingleft-2" style="width: 1073.5px; white-space: normal;"><li><p>@Capturing主要用于子类/实现类的Mock<br/><br/>@Capturing平时较少用到，但某些场景下，还非用它不可。 举个例子：通常我们的系统中，都有权限校验。我们通常用AOP来做权限校验，对不？可是AOP生成的类是哪个，连类名都不知道，还怎么Mock? AOP生成的类是动态生成的。可是我们在单元测试时，不希望程序卡在权限校验上（除非是为了测试权限的测试程序）。这种情况下怎么办？用@Capturing !&nbsp; 看下面的例子！<br/><br/></p></li><pre class="brush:java;toolbar:false">//权限类，校验用户没有权限访问某资源
+public&nbsp;interface&nbsp;IPrivilege&nbsp;{
+	/**
+	&nbsp;*&nbsp;判断用户有没有权限
+	&nbsp;*&nbsp;
+	&nbsp;*&nbsp;@param&nbsp;userId
+	&nbsp;*&nbsp;@return&nbsp;有权限，就返回true,否则返回false
+	&nbsp;*/
+	public&nbsp;boolean&nbsp;isAllow(long&nbsp;userId);
+
+}</pre><pre class="brush:java;toolbar:false">//@Capturing注解用途
+public&nbsp;class&nbsp;CapturingTest&nbsp;{
+	//&nbsp;测试用户ID
+	long&nbsp;testUserId&nbsp;=&nbsp;123456l;
+	//&nbsp;权限检验类，可能是人工写的
+	IPrivilege&nbsp;privilegeManager1&nbsp;=&nbsp;new&nbsp;IPrivilege()&nbsp;{
+		@Override
+		public&nbsp;boolean&nbsp;isAllow(long&nbsp;userId)&nbsp;{
+			if&nbsp;(userId&nbsp;==&nbsp;testUserId)&nbsp;{
+				return&nbsp;false;
+			}
+			return&nbsp;true;
+		}
+	};
+	//&nbsp;权限检验类，可能是JDK动态代理生成。我们通常AOP来做权限校验。
+	IPrivilege&nbsp;privilegeManager2&nbsp;=&nbsp;(IPrivilege)&nbsp;Proxy.newProxyInstance(IPrivilege.class.getClassLoader(),
+			new&nbsp;Class[]&nbsp;{&nbsp;IPrivilege.class&nbsp;},&nbsp;new&nbsp;InvocationHandler()&nbsp;{
+				@Override
+				public&nbsp;Object&nbsp;invoke(Object&nbsp;proxy,&nbsp;Method&nbsp;method,&nbsp;Object[]&nbsp;args)&nbsp;{
+					if&nbsp;((long)&nbsp;args[0]&nbsp;==&nbsp;testUserId)&nbsp;{
+						return&nbsp;false;
+					}
+					return&nbsp;true;
+				}
+			});
+
+	//&nbsp;有Cautring情形
+	@Test
+	public&nbsp;void&nbsp;testCaputring(@Capturing&nbsp;IPrivilege&nbsp;privilegeManager)&nbsp;{
+		//&nbsp;加上了JMockit的API&nbsp;@Capturing,
+		//&nbsp;JMockit会帮我们实例化这个对象，它除了具有@Mocked的特点，还能影响它的子类/实现类
+		new&nbsp;Expectations()&nbsp;{
+			{
+				//&nbsp;对IPrivilege的所有实现类录制，假设测试用户有权限
+				privilegeManager.isAllow(testUserId);
+				result&nbsp;=&nbsp;true;
+			}
+		};
+		//&nbsp;不管权限校验的实现类是哪个，这个测试用户都有权限
+		Assert.assertTrue(privilegeManager1.isAllow(testUserId));
+		Assert.assertTrue(privilegeManager2.isAllow(testUserId));
+	}
+&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;没有Cautring情形
+	@Test
+	public&nbsp;void&nbsp;testWithoutCaputring()&nbsp;{
+		//&nbsp;不管权限校验的实现类是哪个，这个测试用户没有权限
+		Assert.assertTrue(!privilegeManager1.isAllow(testUserId));
+		Assert.assertTrue(!privilegeManager2.isAllow(testUserId));
+	}
+}</pre><li><p>什么测试场景用@Capturing&nbsp;</p></li></ol><p>&nbsp; &nbsp; 我们只知道父类或接口时，但我们需要控制它所有子类的行为时，子类可能有多个实现（可能有人工写的，也可能是AOP代理自动生成时）。就用@Capturing。&nbsp;</p></div>
+		<script type="text/javascript">
+  	uParse('#articleContent', {
+	    rootPath: '/static/ueditor/'
+		})
+	</script>
+		
+	</div>
+	<!--/row-->
+</div>
+<!--/.fluid-container-->
+
+
+<hr>
+<footer>
+	<p>
+		<span>&copy; JMockit中文网 2017</span>&nbsp;<span><a href="showChannel.htm?channel=6">关于本站</a></span>&nbsp;<span><a href="static/images/coffee.png" target="_blank">打赏咖啡</a></span>
+	</p>
+</footer> 
+</body>
+</html>

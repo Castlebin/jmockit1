@@ -1,0 +1,184 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>JMockit中文网</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="icon" href="static/images/icon.jpg" type="image/jpg">
+<!-- Le styles -->
+<link href="static/bootstrap/css/bootstrap.css" rel="stylesheet">
+<style type="text/css">
+body {
+	padding-top: 60px;
+	padding-bottom: 40px;
+}
+
+.sidebar-nav {
+	padding: 9px 0;
+}
+
+@media ( max-width : 980px) {
+	/* Enable use of floated navbar text */
+	.navbar-text.pull-right {
+		float: none;
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+}
+#channelNav  li  {
+clear:none;
+}
+ 
+</style>
+<link href="static/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+
+<script type="text/javascript" src="static/ueditor/ueditor.parse.js"></script>
+<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+      <script src="/static/bootstrap/js/html5shiv.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+	<div class="navbar navbar-inverse navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+					<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+				</button>
+				<a class="brand" href="index.htm">JMockit中文网</a>
+				<div class="nav-collapse collapse">
+					<!-- 
+					<p class="navbar-text pull-right">
+						Logged in as <a href="#" class="navbar-link">Username</a>
+					</p>
+					 -->
+					<ul class="nav" id="channelNav">
+
+						
+							<li ><a href="showChannel.htm?channel=1">JMockit简介 </a></li>
+						
+							<li ><a href="showChannel.htm?channel=2">JMockit基础 </a></li>
+						
+							<li ><a href="showChannel.htm?channel=3">JMockit常见用法 </a></li>
+						
+							<li class="active"><a href="showChannel.htm?channel=4">JMockit高级用法 </a></li>
+						
+							<li ><a href="showChannel.htm?channel=5">JMockit原理剖析 </a></li>
+						
+						<li><a href="https://github.com/hzdavid/jmockit.cn/issues" target="_blank">交流社区</a></li>
+
+					</ul>
+				</div>
+				<!--/.nav-collapse -->
+			</div>
+		</div>
+	</div>
+<div class="container-fluid">
+	<div class="row-fluid">
+		
+			<div class="span3">
+				<div class="well sidebar-nav">
+					<ul class="nav nav-list">
+						
+							<li ><a href="showArticle.htm?id=14">Mock构造函数&初始代码块 </a></li>
+						
+							<li class="active"><a href="showArticle.htm?id=15">Mock一类多实例 </a></li>
+						
+							<li ><a href="showArticle.htm?id=17">Mock泛型(类型变量） </a></li>
+						
+							<li ><a href="showArticle.htm?id=18">Mock方法中调用老方法 </a></li>
+						
+
+					</ul>
+				</div>
+			</div>
+		
+		<div class="span9 text-left" id="articleContent"><p>@Mocked太狠了，把类的所有的实例都Mock了。有时候我们希望一个类不同的实例有不同的Mock逻辑，怎么呢？</p><p>下面列举3种方法。还是以<a href="showArticle.htm?id=2" target="_blank">如何Mock类</a>中的提到的AnOrdinaryClass为例。</p><p><br/></p><pre class="brush:java;toolbar:false">//一个类多个实例的Mock&nbsp;
+public&nbsp;class&nbsp;OneClassManyInstanceMockingTest&nbsp;{
+	//&nbsp;Mock方法一:&nbsp;把实例传入Expectations的构造函数。适用场景：&nbsp;只Mock实例的部分方法，对实例的类的其它实例不产生影响
+	@Test
+	public&nbsp;void&nbsp;testMocking1()&nbsp;{
+		AnOrdinaryClass&nbsp;instance1&nbsp;=&nbsp;new&nbsp;AnOrdinaryClass();
+		AnOrdinaryClass&nbsp;instance2&nbsp;=&nbsp;new&nbsp;AnOrdinaryClass();
+		//&nbsp;直接把实例传给Expectations的构造函数即可Mock这个实例
+		new&nbsp;Expectations(instance1,&nbsp;instance2)&nbsp;{
+			{
+				instance1.ordinaryMethod();
+				result&nbsp;=&nbsp;20;
+				instance2.ordinaryMethod();
+				result&nbsp;=&nbsp;200;
+			}
+		};
+		AnOrdinaryClass&nbsp;instance3&nbsp;=&nbsp;new&nbsp;AnOrdinaryClass();
+		//&nbsp;instance1的ordinaryMethod被Mock了
+		Assert.assertTrue(instance1.ordinaryMethod()&nbsp;==&nbsp;20);
+		//&nbsp;instance2的ordinaryMethod被Mock了
+		Assert.assertTrue(instance2.ordinaryMethod()&nbsp;==&nbsp;200);
+		//&nbsp;instance3不受影响。
+		Assert.assertTrue(instance3.ordinaryMethod()&nbsp;==&nbsp;2);
+	}
+	//&nbsp;Mock方法二:&nbsp;用@Mocked。适用场景：&nbsp;类的所实例都需要Mock，但不同实例也能保留不同的Mock逻辑
+	@Test
+	public&nbsp;void&nbsp;testMocking2(@Mocked&nbsp;AnOrdinaryClass&nbsp;instance1,&nbsp;@Mocked&nbsp;AnOrdinaryClass&nbsp;instance2)&nbsp;{
+		new&nbsp;Expectations()&nbsp;{
+			{
+				instance1.ordinaryMethod();
+				result&nbsp;=&nbsp;20;
+				instance2.ordinaryMethod();
+				result&nbsp;=&nbsp;200;
+			}
+		};
+		AnOrdinaryClass&nbsp;instance3&nbsp;=&nbsp;new&nbsp;AnOrdinaryClass();
+		//&nbsp;instance1的ordinaryMethod被Mock了
+		Assert.assertTrue(instance1.ordinaryMethod()&nbsp;==&nbsp;20);
+		//&nbsp;instance2的ordinaryMethod被Mock了
+		Assert.assertTrue(instance2.ordinaryMethod()&nbsp;==&nbsp;200);
+		//&nbsp;instance3受@Mock的影响。@Mock会把类的所有方法都Mock，返回类型为基本数据类型的返回0
+		Assert.assertTrue(instance3.ordinaryMethod()&nbsp;==&nbsp;0);
+	}
+	//&nbsp;Mock方法二:&nbsp;用@Injectable。适用场景：&nbsp;不是类的所实例都需要Mock，不同实例也能保留不同的Mock逻辑
+	@Test
+	public&nbsp;void&nbsp;testMocking3(@Injectable&nbsp;AnOrdinaryClass&nbsp;instance1,&nbsp;@Injectable&nbsp;AnOrdinaryClass&nbsp;instance2)&nbsp;{
+		new&nbsp;Expectations()&nbsp;{
+			{
+				instance1.ordinaryMethod();
+				result&nbsp;=&nbsp;20;
+				instance2.ordinaryMethod();
+				result&nbsp;=&nbsp;200;
+			}
+		};
+		AnOrdinaryClass&nbsp;instance3&nbsp;=&nbsp;new&nbsp;AnOrdinaryClass();
+		//&nbsp;instance1的ordinaryMethod被Mock了
+		Assert.assertTrue(instance1.ordinaryMethod()&nbsp;==&nbsp;20);
+		//&nbsp;instance2的ordinaryMethod被Mock了
+		Assert.assertTrue(instance2.ordinaryMethod()&nbsp;==&nbsp;200);
+		//&nbsp;instance3不受@Injectable的影响。因为@Injectable只影响某个实例
+		Assert.assertTrue(instance3.ordinaryMethod()&nbsp;==&nbsp;2);
+	}
+
+}</pre><p><br/></p></div>
+		<script type="text/javascript">
+  	uParse('#articleContent', {
+	    rootPath: '/static/ueditor/'
+		})
+	</script>
+		
+	</div>
+	<!--/row-->
+</div>
+<!--/.fluid-container-->
+
+
+<hr>
+<footer>
+	<p>
+		<span>&copy; JMockit中文网 2017</span>&nbsp;<span><a href="showChannel.htm?channel=6">关于本站</a></span>&nbsp;<span><a href="static/images/coffee.png" target="_blank">打赏咖啡</a></span>
+	</p>
+</footer> 
+</body>
+</html>

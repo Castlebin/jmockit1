@@ -1,0 +1,146 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>JMockit中文网</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="icon" href="static/images/icon.jpg" type="image/jpg">
+<!-- Le styles -->
+<link href="static/bootstrap/css/bootstrap.css" rel="stylesheet">
+<style type="text/css">
+body {
+	padding-top: 60px;
+	padding-bottom: 40px;
+}
+
+.sidebar-nav {
+	padding: 9px 0;
+}
+
+@media ( max-width : 980px) {
+	/* Enable use of floated navbar text */
+	.navbar-text.pull-right {
+		float: none;
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+}
+#channelNav  li  {
+clear:none;
+}
+ 
+</style>
+<link href="static/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+
+<script type="text/javascript" src="static/ueditor/ueditor.parse.js"></script>
+<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+      <script src="/static/bootstrap/js/html5shiv.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+	<div class="navbar navbar-inverse navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+					<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+				</button>
+				<a class="brand" href="index.htm">JMockit中文网</a>
+				<div class="nav-collapse collapse">
+					<!-- 
+					<p class="navbar-text pull-right">
+						Logged in as <a href="#" class="navbar-link">Username</a>
+					</p>
+					 -->
+					<ul class="nav" id="channelNav">
+
+						
+							<li ><a href="showChannel.htm?channel=1">JMockit简介 </a></li>
+						
+							<li ><a href="showChannel.htm?channel=2">JMockit基础 </a></li>
+						
+							<li ><a href="showChannel.htm?channel=3">JMockit常见用法 </a></li>
+						
+							<li class="active"><a href="showChannel.htm?channel=4">JMockit高级用法 </a></li>
+						
+							<li ><a href="showChannel.htm?channel=5">JMockit原理剖析 </a></li>
+						
+						<li><a href="https://github.com/hzdavid/jmockit.cn/issues" target="_blank">交流社区</a></li>
+
+					</ul>
+				</div>
+				<!--/.nav-collapse -->
+			</div>
+		</div>
+	</div>
+<div class="container-fluid">
+	<div class="row-fluid">
+		
+			<div class="span3">
+				<div class="well sidebar-nav">
+					<ul class="nav nav-list">
+						
+							<li ><a href="showArticle.htm?id=14">Mock构造函数&初始代码块 </a></li>
+						
+							<li ><a href="showArticle.htm?id=15">Mock一类多实例 </a></li>
+						
+							<li ><a href="showArticle.htm?id=17">Mock泛型(类型变量） </a></li>
+						
+							<li class="active"><a href="showArticle.htm?id=18">Mock方法中调用老方法 </a></li>
+						
+
+					</ul>
+				</div>
+			</div>
+		
+		<div class="span9 text-left" id="articleContent"><p>通过前面对MockUp介绍 ，使用，我们发现MockUp确实很强大。使用@Mock方法太直接了。</p><p>可是有时候 ，你只希望@Mock的方法当入参数满足特定条件下才走Mock逻辑，其它条件走老的逻辑。可以吗？</p><p>当然可以！看下面的例子：</p><pre class="brush:java;toolbar:false">//Mock方法中还可以调用老方法
+public&nbsp;class&nbsp;InvocationMockUpTest&nbsp;{
+	@Test
+	public&nbsp;void&nbsp;testMockUp()&nbsp;{
+		//&nbsp;对Java自带类Calendar的get方法进行定制
+		new&nbsp;MockUp&lt;Calendar&gt;(Calendar.class)&nbsp;{
+			//&nbsp;申明参数invocation，表示老方法的调用
+			@Mock
+			public&nbsp;int&nbsp;get(Invocation&nbsp;invocation,&nbsp;int&nbsp;unit)&nbsp;{
+				//&nbsp;只希望时间是早上7点
+				if&nbsp;(unit&nbsp;==&nbsp;Calendar.HOUR_OF_DAY)&nbsp;{
+					return&nbsp;7;
+				}
+				//&nbsp;其它时间（年份，月份，日，分，秒均不变)
+				return&nbsp;invocation.proceed(unit);
+			}
+		};
+		Calendar&nbsp;now&nbsp;=&nbsp;Calendar.getInstance();
+		//&nbsp;只有小时变成Mock方法
+		Assert.assertTrue(now.get(Calendar.HOUR_OF_DAY)&nbsp;==&nbsp;7);
+		//&nbsp;其它的还是走老的方法
+		Assert.assertTrue(now.get(Calendar.MONTH)&nbsp;==&nbsp;(new&nbsp;Date()).getMonth());
+		Assert.assertTrue(now.get(Calendar.DAY_OF_MONTH)&nbsp;==&nbsp;(new&nbsp;Date()).getDate());
+	}
+
+}</pre><p><br/></p></div>
+		<script type="text/javascript">
+  	uParse('#articleContent', {
+	    rootPath: '/static/ueditor/'
+		})
+	</script>
+		
+	</div>
+	<!--/row-->
+</div>
+<!--/.fluid-container-->
+
+
+<hr>
+<footer>
+	<p>
+		<span>&copy; JMockit中文网 2017</span>&nbsp;<span><a href="showChannel.htm?channel=6">关于本站</a></span>&nbsp;<span><a href="static/images/coffee.png" target="_blank">打赏咖啡</a></span>
+	</p>
+</footer> 
+</body>
+</html>
