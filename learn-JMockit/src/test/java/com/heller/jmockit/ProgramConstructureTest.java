@@ -3,13 +3,10 @@ package com.heller.jmockit;
 import mockit.Expectations;
 import mockit.Mocked;
 import mockit.Verifications;
-import mockit.integration.junit4.JMockit;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 //JMockit的程序结构
-@RunWith(JMockit.class)
 public class ProgramConstructureTest {
     
     // 这是一个测试属性

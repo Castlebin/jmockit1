@@ -7,10 +7,8 @@ import java.lang.reflect.Proxy;
 import com.heller.jmockit.auth.service.Privilege;
 import mockit.Capturing;
 import mockit.Expectations;
-import mockit.integration.junit4.JMockit;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 /**
  * @Capturing平时较少用到，但某些场景下，还非用它不可。 举个例子：通常我们的系统中，都有权限校验。我们通常用AOP来做权限校验，对不？可是AOP生成的类是哪个，连类名都不知道，还怎么Mock?
@@ -18,7 +16,6 @@ import org.junit.runner.RunWith;
  *
  * 加上了JMockit的API @Capturing, JMockit会帮我们实例化这个对象，它除了具有@Mocked的特点，还能影响它的*子类/实现类*
  */
-@RunWith(JMockit.class)
 //@Capturing注解用途
 public class CapturingTest {
     
